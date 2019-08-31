@@ -28,10 +28,18 @@ private slots:
 
     void on_set_point2_clicked();
 
+    void on_ResetButton_clicked();
+
+    void on_showGrid_clicked();
+
+    void on_DDALine_clicked();
+
+    void on_BresenhamLine_clicked();
+
 private:
     Ui::MainWindow *ui;
     QPoint p1,p2;
-    void point(int,int,int);
+    void point(int,int,int,int,int);
 };
 
 #endif // MAINWINDOW_H
