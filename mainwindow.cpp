@@ -139,6 +139,7 @@ void MainWindow::on_ResetButton_clicked()
 void MainWindow::on_showGrid_clicked()
 {
     int r=80,g=80,b=80;
+    ui->gridsize->setMinimum(1);
     int k = ui->gridsize->value();
     k = k>1 ? k: 1;
     for(int j=0;j<img.height();j++)
@@ -164,6 +165,7 @@ void MainWindow::on_showGrid_clicked()
 void MainWindow::on_DDALine_clicked()
 {
     int r=220, g=153, b=196;
+    ui->gridsize->setMinimum(1);
     //This function draws a line between the two selected points using DDA algorithm
     int k = ui->gridsize->value();
     //Now p1 and p2 contains the points
@@ -201,6 +203,7 @@ void MainWindow::on_DDALine_clicked()
 void MainWindow::on_BresenhamLine_clicked()
 {
     int r=160,g=138,b=148;
+    ui->gridsize->setMinimum(1);
     int k = ui->gridsize->value();
     //Store the two points
     int x1=p1.x();
