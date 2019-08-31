@@ -262,3 +262,131 @@ void MainWindow::on_BresenhamLine_clicked()
         }
     }
 }
+
+void MainWindow::on_Midpoint_clicked()
+{
+    ui->gridsize->setMinimum(1);
+    //Get the radius
+    int r0=ui->circle_radius->value();
+
+    //Set the centre
+    if(ui->draw_circle->isChecked()){
+        p1.setX(ui->frame->x);
+        p1.setY(ui->frame->y);
+
+        drawCircle(p1,r0);
+    }
+}
+void MainWindow::drawCircle(QPoint p1, int r0)
+{
+    int r=218,g=118,b=235;
+    //Function to draw the circle
+    int x_centre=p1.x();
+    int y_centre=p1.y();
+
+    int k = ui->gridsize->value();//GridSize
+
+    x_centre=(x_centre/k)*k+k/2;
+    y_centre=(y_centre/k)*k+k/2;
+
+    int x=r0*k;
+    int y=0;
+
+    point(x+x_centre,y+y_centre,r,g,b);
+
+    if(r0>0)
+    {
+        point(x+x_centre,-y+y_centre,r,g,b);
+        point(y+x_centre,x+y_centre,r,g,b);
+        point(-y+x_centre,x+y_centre,r,g,b);
+    }
+
+
+    int P=(1-r0)*k;
+
+    while(x>y)
+    {
+        y++;
+
+        if(P<=0)
+            P=P+2*y+1;
+        else
+        {
+            x--;
+            P=P+2*y-2*x+1;
+        }
+        if(x<y)
+            break;
+
+        point(x+x_centre,y+y_centre,r,g,b);
+        point(-x+x_centre,y+y_centre,r,g,b);
+        point(x+x_centre,-y+y_centre,r,g,b);
+        point(-x+x_centre,-y+y_centre,r,g,b);
+
+        if(x!=y)
+        {
+            point(y+x_centre,x+y_centre,r,g,b);
+            point(-y+x_centre,x+y_centre,r,g,b);
+            point(y+x_centre,-x+y_centre,r,g,b);
+            point(-y+x_centre,-x+y_centre,r,g,b);
+        }
+    }
+}
+
+void MainWindow::on_BresenhamCircle_clicked()
+{
+    ui->gridsize->setMinimum(1);
+    //Get the radius
+    int r0=ui->circle_radius->value();
+
+    //Set the centre
+    if(ui->draw_circle->isChecked()){
+        p1.setX(ui->frame->x);
+        p1.setY(ui->frame->y);
+
+        drawCircleBress(p1,r0);
+    }
+}
+
+void MainWindow::drawCircleBress(QPoint p1, int r0)
+{
+    int r=218,g=118,b=235;
+    //Function to draw the circle
+    int x_centre=p1.x();
+    int y_centre=p1.y();
+
+    int k = ui->gridsize->value();//GridSize
+
+    x_centre=(x_centre/k)*k+k/2;
+    y_centre=(y_centre/k)*k+k/2;
+
+    int y=r0*k;
+    int x=0;
+
+    int d=(3-2*r0)*k;
+
+    while(y>=x)
+    {
+        point(x_centre+x,y_centre+y,r,g,b);
+        point(x_centre+x,y_centre-y,r,g,b);
+        point(x_centre-x,y_centre+y,r,g,b);
+        point(x_centre-x,y_centre-y,r,g,b);
+
+        point(x_centre+y,y_centre+x,r,g,b);
+        point(x_centre+y,y_centre-x,r,g,b);
+        point(x_centre-y,y_centre+x,r,g,b);
+        point(x_centre-y,y_centre-x,r,g,b);
+
+        x++;
+        if(d>0)
+        {
+            y--;
+            d=d+4*(x-y)+10;
+        }
+        else
+        {
+            d=d+4*x+6;
+        }
+    }
+}
+

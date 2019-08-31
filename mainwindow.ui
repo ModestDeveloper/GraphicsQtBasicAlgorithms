@@ -88,7 +88,7 @@ background-color: rgb(85, 255, 255);</string>
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>460</x>
+      <x>500</x>
       <y>420</y>
       <width>239</width>
       <height>25</height>
@@ -118,204 +118,155 @@ background-color: rgb(85, 255, 255);</string>
      </item>
     </layout>
    </widget>
-   <widget class="Line" name="line">
+   <widget class="QWidget" name="">
     <property name="geometry">
      <rect>
-      <x>460</x>
-      <y>240</y>
-      <width>241</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="orientation">
-     <enum>Qt::Horizontal</enum>
-    </property>
-   </widget>
-   <widget class="Line" name="line_2">
-    <property name="geometry">
-     <rect>
-      <x>460</x>
-      <y>310</y>
-      <width>241</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="orientation">
-     <enum>Qt::Horizontal</enum>
-    </property>
-   </widget>
-   <widget class="QWidget" name="layoutWidget_2">
-    <property name="geometry">
-     <rect>
-      <x>460</x>
-      <y>330</y>
-      <width>241</width>
-      <height>46</height>
-     </rect>
-    </property>
-    <layout class="QVBoxLayout" name="verticalLayout_10">
-     <item>
-      <widget class="QLabel" name="label_4">
-       <property name="text">
-        <string>Circle Drawing Algorithms</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_7">
-       <item>
-        <widget class="QPushButton" name="Midpoint">
-         <property name="text">
-          <string>Mid Point</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="BresenhamCircle">
-         <property name="text">
-          <string>Bresenham</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-    </layout>
-   </widget>
-   <widget class="QWidget" name="layoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>460</x>
-      <y>260</y>
-      <width>241</width>
-      <height>46</height>
-     </rect>
-    </property>
-    <layout class="QVBoxLayout" name="verticalLayout_9">
-     <item>
-      <widget class="QLabel" name="label_2">
-       <property name="text">
-        <string>Line Drawing Algorithms</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_6">
-       <item>
-        <widget class="QPushButton" name="DDALine">
-         <property name="text">
-          <string>DDA</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="BresenhamLine">
-         <property name="text">
-          <string>Bresenham</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-    </layout>
-   </widget>
-   <widget class="QWidget" name="layoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>460</x>
+      <x>500</x>
       <y>10</y>
       <width>241</width>
-      <height>221</height>
+      <height>371</height>
      </rect>
     </property>
-    <layout class="QVBoxLayout" name="verticalLayout_11">
+    <layout class="QVBoxLayout" name="verticalLayout_12">
      <item>
-      <widget class="QLabel" name="label_7">
-       <property name="text">
-        <string>                 COMPUTER  GRAPHICS</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <layout class="QVBoxLayout" name="verticalLayout_8">
+      <layout class="QVBoxLayout" name="verticalLayout_11">
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_5">
+        <widget class="QLabel" name="label_7">
+         <property name="text">
+          <string>                 COMPUTER  GRAPHICS</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QVBoxLayout" name="verticalLayout_8">
          <item>
-          <layout class="QVBoxLayout" name="verticalLayout_3">
+          <layout class="QHBoxLayout" name="horizontalLayout_5">
            <item>
-            <layout class="QVBoxLayout" name="verticalLayout">
+            <layout class="QVBoxLayout" name="verticalLayout_3">
              <item>
-              <widget class="QLabel" name="label_3">
-               <property name="text">
-                <string>Mouse Movement</string>
-               </property>
-              </widget>
+              <layout class="QVBoxLayout" name="verticalLayout">
+               <item>
+                <widget class="QLabel" name="label_3">
+                 <property name="text">
+                  <string>Mouse Movement</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="mouse_movement">
+                 <property name="frameShape">
+                  <enum>QFrame::Panel</enum>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                </widget>
+               </item>
+              </layout>
              </item>
              <item>
-              <widget class="QLabel" name="mouse_movement">
-               <property name="frameShape">
-                <enum>QFrame::Panel</enum>
-               </property>
-               <property name="text">
-                <string/>
-               </property>
-              </widget>
+              <layout class="QVBoxLayout" name="verticalLayout_2">
+               <item>
+                <widget class="QLabel" name="label_5">
+                 <property name="text">
+                  <string>Mouse Pressed</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="mouse_pressed">
+                 <property name="frameShape">
+                  <enum>QFrame::Panel</enum>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                </widget>
+               </item>
+              </layout>
              </item>
             </layout>
            </item>
            <item>
-            <layout class="QVBoxLayout" name="verticalLayout_2">
+            <layout class="QVBoxLayout" name="verticalLayout_7">
              <item>
-              <widget class="QLabel" name="label_5">
+              <widget class="QCheckBox" name="show_axes">
                <property name="text">
-                <string>Mouse Pressed</string>
+                <string>Show Axes</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QLabel" name="mouse_pressed">
-               <property name="frameShape">
-                <enum>QFrame::Panel</enum>
-               </property>
-               <property name="text">
-                <string/>
-               </property>
-              </widget>
+              <layout class="QVBoxLayout" name="verticalLayout_6">
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_4">
+                 <item>
+                  <widget class="QLabel" name="label">
+                   <property name="text">
+                    <string>Grid Size</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QSpinBox" name="gridsize"/>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <widget class="QPushButton" name="showGrid">
+                 <property name="text">
+                  <string>Show Grid</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
              </item>
             </layout>
            </item>
           </layout>
          </item>
          <item>
-          <layout class="QVBoxLayout" name="verticalLayout_7">
+          <layout class="QVBoxLayout" name="verticalLayout_5">
            <item>
-            <widget class="QCheckBox" name="show_axes">
-             <property name="text">
-              <string>Show Axes</string>
-             </property>
-            </widget>
+            <layout class="QHBoxLayout" name="horizontalLayout">
+             <item>
+              <widget class="QRadioButton" name="draw_circle">
+               <property name="text">
+                <string>Draw Circle</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSpinBox" name="circle_radius"/>
+             </item>
+            </layout>
            </item>
            <item>
-            <layout class="QVBoxLayout" name="verticalLayout_6">
+            <layout class="QHBoxLayout" name="horizontalLayout_2">
              <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_4">
+              <widget class="QRadioButton" name="draw_line">
+               <property name="text">
+                <string>Draw Line</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <layout class="QVBoxLayout" name="verticalLayout_4">
                <item>
-                <widget class="QLabel" name="label">
+                <widget class="QPushButton" name="set_point1">
                  <property name="text">
-                  <string>Grid Size</string>
+                  <string>Set point 1</string>
                  </property>
                 </widget>
                </item>
                <item>
-                <widget class="QSpinBox" name="gridsize"/>
+                <widget class="QPushButton" name="set_point2">
+                 <property name="text">
+                  <string>Set point 2</string>
+                 </property>
+                </widget>
                </item>
               </layout>
-             </item>
-             <item>
-              <widget class="QPushButton" name="showGrid">
-               <property name="text">
-                <string>Show Grid</string>
-               </property>
-              </widget>
              </item>
             </layout>
            </item>
@@ -323,50 +274,75 @@ background-color: rgb(85, 255, 255);</string>
          </item>
         </layout>
        </item>
+      </layout>
+     </item>
+     <item>
+      <widget class="Line" name="line">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout_9">
        <item>
-        <layout class="QVBoxLayout" name="verticalLayout_5">
+        <widget class="QLabel" name="label_2">
+         <property name="text">
+          <string>Line Drawing Algorithms</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_6">
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayout">
-           <item>
-            <widget class="QRadioButton" name="draw_circle">
-             <property name="text">
-              <string>Draw Circle</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QSpinBox" name="circle_radius"/>
-           </item>
-          </layout>
+          <widget class="QPushButton" name="DDALine">
+           <property name="text">
+            <string>DDA</string>
+           </property>
+          </widget>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_2">
-           <item>
-            <widget class="QRadioButton" name="draw_line">
-             <property name="text">
-              <string>Draw Line</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <layout class="QVBoxLayout" name="verticalLayout_4">
-             <item>
-              <widget class="QPushButton" name="set_point1">
-               <property name="text">
-                <string>Set point 1</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="set_point2">
-               <property name="text">
-                <string>Set point 2</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-          </layout>
+          <widget class="QPushButton" name="BresenhamLine">
+           <property name="text">
+            <string>Bresenham</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <widget class="Line" name="line_2">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout_10">
+       <item>
+        <widget class="QLabel" name="label_4">
+         <property name="text">
+          <string>Circle Drawing Algorithms</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_7">
+         <item>
+          <widget class="QPushButton" name="Midpoint">
+           <property name="text">
+            <string>Mid Point</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="BresenhamCircle">
+           <property name="text">
+            <string>Bresenham</string>
+           </property>
+          </widget>
          </item>
         </layout>
        </item>
