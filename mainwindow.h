@@ -42,6 +42,8 @@ private slots:
     void on_BresenhamCircle_clicked();
     void drawCircleBress(QPoint p1, int r0);
 
+//    void on_MidpointEllipse_clicked();
+//    void drawEllipse(QPoint p, int rx, int ry);
 private:
     Ui::MainWindow *ui;
     QPoint p1,p2;

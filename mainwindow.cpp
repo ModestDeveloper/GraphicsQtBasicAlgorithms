@@ -9,6 +9,7 @@
 #include <QPoint>
 #include <unistd.h>
 static QImage img=QImage(450,450,QImage::Format_RGB888);
+//static QImage img;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -28,6 +29,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::point(int x,int y,int r,int g,int b)
 {
+//    img=QImage(ui->frame->width(),ui->frame->height(),QImage::Format_RGB888);
     int k = ui->gridsize->value();//GridSize
     if(k>1)
     {
@@ -58,18 +60,34 @@ void MainWindow::point(int x,int y,int r,int g,int b)
 
 void MainWindow::showMousePosition(QPoint &pos)
 {
-    ui->mouse_movement->setText(" X : "+QString::number(pos.x())+", Y : "+QString::number(pos.y()));
+    ui->gridsize->setMinimum(1);
+    int k = ui->gridsize->value();
+    int rel_x = ((pos.x() - img.width()/2 )/k);
+    int rel_y = (((img.height()-1)/2 - pos.y())/k);
+//    ui->mouse_movement->setText(" X : "+QString::number(pos.x())+", Y : "+QString::number(pos.y()));
+    ui->mouse_movement->setText(" X : "+QString::number(rel_x)+", Y : "+QString::number(rel_y));
+
 }
 void MainWindow::Mouse_Pressed()
 {
-    ui->mouse_pressed->setText(" X : "+QString::number(ui->frame->x)+", Y : "+QString::number(ui->frame->y));
+    int r=80,g=80,b=80;
+    ui->gridsize->setMinimum(1);
+    point(ui->frame->x,ui->frame->y,r,g,b);
+
+    int k = ui->gridsize->value();
+    int rel_x = ((ui->frame->x - img.width()/2 )/k);
+    int rel_y = (((img.height()-1)/2 - ui->frame->y))/k;
+
+//    ui->mouse_pressed->setText(" X : "+QString::number(ui->frame->x)+", Y : "+QString::number(ui->frame->y));
+    ui->mouse_pressed->setText(" X : "+QString::number(rel_x)+", Y : "+QString::number(rel_y));
 //    point(ui->frame->x,ui->frame->y,0,0,0);
     ui->x_axis->move(0,ui->frame->y);
-    ui->y_axis->move(ui->frame->x,0);
+    ui->y_axis->move(ui->frame->x,0);   
 }
 
 void MainWindow::on_show_axes_clicked()
 {
+//    img=QImage(ui->frame->width(),ui->frame->height(),QImage::Format_RGB888);
     if(ui->show_axes->isChecked())
     {
         //Draw Y-axis
@@ -106,6 +124,7 @@ void MainWindow::on_set_point2_clicked()
 
 void MainWindow::on_Draw_clicked()
 {
+//    img=QImage(ui->frame->width(),ui->frame->height(),QImage::Format_RGB888);
     int r0=ui->circle_radius->value();
     QPainter painter(&img);
     QPen pen;
@@ -126,6 +145,7 @@ void MainWindow::on_Draw_clicked()
 
 void MainWindow::on_ResetButton_clicked()
 {
+//    img=QImage(ui->frame->width(),ui->frame->height(),QImage::Format_RGB888);
     for(int j=0;j<img.height();j++)
     {
         for(int i=0;i<img.width();i++)
@@ -138,10 +158,11 @@ void MainWindow::on_ResetButton_clicked()
 
 void MainWindow::on_showGrid_clicked()
 {
+//    img=QImage(ui->frame->width(),ui->frame->height(),QImage::Format_RGB888);
     int r=80,g=80,b=80;
     ui->gridsize->setMinimum(1);
     int k = ui->gridsize->value();
-    k = k>1 ? k: 1;
+//    k = k>1 ? k: 1;
     for(int j=0;j<img.height();j++)
     {
         for(int i=0;i<img.width();i++)
@@ -245,7 +266,7 @@ void MainWindow::on_BresenhamLine_clicked()
         }
     }
     //Case for steep slope
-    else
+    else if(dx<dy)
     {
         int p=2*(dx)-dy;
         int x=x1;
@@ -259,6 +280,16 @@ void MainWindow::on_BresenhamLine_clicked()
                 p-=2*(dy);
             }
             p+=2*(dx);
+        }
+    }
+    else{
+        int x=x1;
+        int y=y1;
+        for(int x=x1; x!=x2; x+=xinc)
+        {
+            point(x,y,r,g,b);
+            x += 1;
+            y += 1;
         }
     }
 }
@@ -390,3 +421,95 @@ void MainWindow::drawCircleBress(QPoint p1, int r0)
     }
 }
 
+
+
+//void MainWindow::on_MidpointEllipse_clicked()
+//{
+//    //Get the radius
+//    int rx=ui->ellipse_rx->value();
+//    int ry=ui->ellipse_ry->value();
+
+//    //Set the centre
+//    if(ui->draw_ellipse->isChecked()){
+//        p1.setX(ui->frame->x);
+//        p1.setY(ui->frame->y);
+
+//        drawEllipse(p1,rx,ry);
+//    }
+//}
+//void MainWindow::drawEllipse(QPoint p, int rx, int ry)
+//{
+//    //Function to draw the ellipse
+//    //Get the centre
+//    int x_centre=p.x();
+//    int y_centre=p.y();
+//    int k = ui->gridsize->value();//GridSize
+
+//    x_centre=(x_centre/k)*k+k/2;
+//    y_centre=(y_centre/k)*k+k/2;
+
+//    int x=0;
+//    int y=ry;
+
+//    int rx2=rx*rx;
+//    int ry2=ry*ry;
+//    int tworx2=2*rx2;
+//    int twory2=2*ry2;
+//    int px=0.0;
+//    int py=tworx2*y;
+
+
+//    //For first region
+//    int p1=ry2-rx2*ry+(0.25)*rx2; //Initial value of decision parameter
+
+
+//    while(px<py)
+//    {
+//        point(x_centre+x*k,y_centre+y*k);
+//        point(x_centre-x*k,y_centre+y*k);
+//        point(x_centre-x*k,y_centre-y*k);
+//        point(x_centre+x*k,y_centre-y*k);
+
+//        x++;
+//        px+=twory2;
+
+//        if(p1>=0)
+//        {
+//            y--;
+//            py-=tworx2;
+//            p1=p1+ry2+px-py;
+
+//        }
+//        else
+//        {
+//            p1=p1+ry2+px;
+//        }
+//    }
+
+//    //For second region
+//    p1=ry2*((double)x+0.5)*((double)x+0.5)+rx2*(y-1)*(y-1)-rx2*ry2; //Initial value of decision paramemter
+
+
+//    while(y>=0)
+//    {
+//        point(x_centre+x*k,y_centre+y*k);
+//        point(x_centre-x*k,y_centre+y*k);
+//        point(x_centre-x*k,y_centre-y*k);
+//        point(x_centre+x*k,y_centre-y*k);
+
+//        y--;
+//        py-=tworx2;
+//        if(p1<=0)
+//        {
+//            x++;
+//            px+=twory2;
+//            p1=p1+rx2-py+px;
+
+//        }
+//        else
+//        {
+//            p1=p1+rx2-py;
+//        }
+
+//    }
+//}
