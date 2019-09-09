@@ -282,16 +282,16 @@ void MainWindow::on_BresenhamLine_clicked()
             p+=2*(dx);
         }
     }
-    else{
-        int x=x1;
-        int y=y1;
-        for(int x=x1; x!=x2; x+=xinc)
-        {
-            point(x,y,r,g,b);
-            x += 1;
-            y += 1;
-        }
-    }
+//    else{
+//        int x=x1;
+//        int y=y1;
+//        for(int x=x1; x!=x2; x+=xinc)
+//        {
+//            point(x,y,r,g,b);
+//            x += 1;
+//            y += 1;
+//        }
+//    }
 }
 
 void MainWindow::on_Midpoint_clicked()
@@ -422,94 +422,95 @@ void MainWindow::drawCircleBress(QPoint p1, int r0)
 }
 
 
+void MainWindow::on_MidpointEllipse_clicked()
+{
+    //Get the radius
+    int rx=ui->ellipse_rx->value();
+    int ry=ui->ellipse_ry->value();
 
-//void MainWindow::on_MidpointEllipse_clicked()
-//{
-//    //Get the radius
-//    int rx=ui->ellipse_rx->value();
-//    int ry=ui->ellipse_ry->value();
+    //Set the centre
+    if(ui->draw_ellipse->isChecked()){
+        p1.setX(ui->frame->x);
+        p1.setY(ui->frame->y);
 
-//    //Set the centre
-//    if(ui->draw_ellipse->isChecked()){
-//        p1.setX(ui->frame->x);
-//        p1.setY(ui->frame->y);
+        drawEllipse(p1,rx,ry);
+    }
+}
+void MainWindow::drawEllipse(QPoint p, int rx, int ry)
+{
+    //Function to draw the ellipse
+    ui->gridsize->setMinimum(1);
+    int r=90,g=186,b=240;
+    //Get the centre
+    int x_centre=p.x();
+    int y_centre=p.y();
+    int k = ui->gridsize->value();//GridSize
 
-//        drawEllipse(p1,rx,ry);
-//    }
-//}
-//void MainWindow::drawEllipse(QPoint p, int rx, int ry)
-//{
-//    //Function to draw the ellipse
-//    //Get the centre
-//    int x_centre=p.x();
-//    int y_centre=p.y();
-//    int k = ui->gridsize->value();//GridSize
+    x_centre=(x_centre/k)*k+k/2;
+    y_centre=(y_centre/k)*k+k/2;
 
-//    x_centre=(x_centre/k)*k+k/2;
-//    y_centre=(y_centre/k)*k+k/2;
+    int x=0;
+    int y=ry;
 
-//    int x=0;
-//    int y=ry;
-
-//    int rx2=rx*rx;
-//    int ry2=ry*ry;
-//    int tworx2=2*rx2;
-//    int twory2=2*ry2;
-//    int px=0.0;
-//    int py=tworx2*y;
-
-
-//    //For first region
-//    int p1=ry2-rx2*ry+(0.25)*rx2; //Initial value of decision parameter
+    int rx2=rx*rx;
+    int ry2=ry*ry;
+    int tworx2=2*rx2;
+    int twory2=2*ry2;
+    int px=0.0;
+    int py=tworx2*y;
 
 
-//    while(px<py)
-//    {
-//        point(x_centre+x*k,y_centre+y*k);
-//        point(x_centre-x*k,y_centre+y*k);
-//        point(x_centre-x*k,y_centre-y*k);
-//        point(x_centre+x*k,y_centre-y*k);
-
-//        x++;
-//        px+=twory2;
-
-//        if(p1>=0)
-//        {
-//            y--;
-//            py-=tworx2;
-//            p1=p1+ry2+px-py;
-
-//        }
-//        else
-//        {
-//            p1=p1+ry2+px;
-//        }
-//    }
-
-//    //For second region
-//    p1=ry2*((double)x+0.5)*((double)x+0.5)+rx2*(y-1)*(y-1)-rx2*ry2; //Initial value of decision paramemter
+    //For first region
+    int p1=ry2-rx2*ry+(0.25)*rx2; //Initial value of decision parameter
 
 
-//    while(y>=0)
-//    {
-//        point(x_centre+x*k,y_centre+y*k);
-//        point(x_centre-x*k,y_centre+y*k);
-//        point(x_centre-x*k,y_centre-y*k);
-//        point(x_centre+x*k,y_centre-y*k);
+    while(px<py)
+    {
+        point(x_centre+x*k,y_centre+y*k,r,g,b);
+        point(x_centre-x*k,y_centre+y*k,r,g,b);
+        point(x_centre-x*k,y_centre-y*k,r,g,b);
+        point(x_centre+x*k,y_centre-y*k,r,g,b);
 
-//        y--;
-//        py-=tworx2;
-//        if(p1<=0)
-//        {
-//            x++;
-//            px+=twory2;
-//            p1=p1+rx2-py+px;
+        x++;
+        px+=twory2;
 
-//        }
-//        else
-//        {
-//            p1=p1+rx2-py;
-//        }
+        if(p1>=0)
+        {
+            y--;
+            py-=tworx2;
+            p1=p1+ry2+px-py;
 
-//    }
-//}
+        }
+        else
+        {
+            p1=p1+ry2+px;
+        }
+    }
+
+    //For second region
+    p1=ry2*((double)x+0.5)*((double)x+0.5)+rx2*(y-1)*(y-1)-rx2*ry2; //Initial value of decision paramemter
+
+
+    while(y>=0)
+    {
+        point(x_centre+x*k,y_centre+y*k,r,g,b);
+        point(x_centre-x*k,y_centre+y*k,r,g,b);
+        point(x_centre-x*k,y_centre-y*k,r,g,b);
+        point(x_centre+x*k,y_centre-y*k,r,g,b);
+
+        y--;
+        py-=tworx2;
+        if(p1<=0)
+        {
+            x++;
+            px+=twory2;
+            p1=p1+rx2-py+px;
+
+        }
+        else
+        {
+            p1=p1+rx2-py;
+        }
+
+    }
+}
