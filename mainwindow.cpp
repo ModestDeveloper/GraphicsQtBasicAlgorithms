@@ -8,11 +8,11 @@
 #include <QPaintDevice>
 #include <QPoint>
 #include <unistd.h>
-static QImage img=QImage(450,450,QImage::Format_RGB888);
+#define pi 3.1415196
 //static QImage img;
 
 MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
+    QMainWindow(parent),img(450,450,QImage::Format_RGB888),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
@@ -38,8 +38,10 @@ void MainWindow::point(int x,int y,int r,int g,int b)
 
         //Drawing the pixels
         for(int i=startX+1;i<(startX+k);i++)
-            for(int j=startY+1;j<(startY+k);j++)
-                img.setPixel(i,j,qRgb(r,g,b));
+            for(int j=startY+1;j<(startY+k);j++){
+                img.setPixelColor(i,j,qRgb(r,g,b));
+//                qDebug()<<i<<" "<<j;
+            }
     }
     else
         img.setPixel(x,y,qRgb(r,g,b));
@@ -300,7 +302,7 @@ void MainWindow::on_Midpoint_clicked()
     //Get the radius
     int r0=ui->circle_radius->value();
 
-    //Set the centre
+    //Set the center
     if(ui->draw_circle->isChecked()){
         p1.setX(ui->frame->x);
         p1.setY(ui->frame->y);
@@ -312,24 +314,24 @@ void MainWindow::drawCircle(QPoint p1, int r0)
 {
     int r=218,g=118,b=235;
     //Function to draw the circle
-    int x_centre=p1.x();
-    int y_centre=p1.y();
+    int x_center=p1.x();
+    int y_center=p1.y();
 
     int k = ui->gridsize->value();//GridSize
 
-    x_centre=(x_centre/k)*k+k/2;
-    y_centre=(y_centre/k)*k+k/2;
+    x_center=(x_center/k)*k+k/2;
+    y_center=(y_center/k)*k+k/2;
 
     int x=r0*k;
     int y=0;
 
-    point(x+x_centre,y+y_centre,r,g,b);
+    point(x+x_center,y+y_center,r,g,b);
 
     if(r0>0)
     {
-        point(x+x_centre,-y+y_centre,r,g,b);
-        point(y+x_centre,x+y_centre,r,g,b);
-        point(-y+x_centre,x+y_centre,r,g,b);
+        point(x+x_center,-y+y_center,r,g,b);
+        point(y+x_center,x+y_center,r,g,b);
+        point(-y+x_center,x+y_center,r,g,b);
     }
 
 
@@ -349,28 +351,83 @@ void MainWindow::drawCircle(QPoint p1, int r0)
         if(x<y)
             break;
 
-        point(x+x_centre,y+y_centre,r,g,b);
-        point(-x+x_centre,y+y_centre,r,g,b);
-        point(x+x_centre,-y+y_centre,r,g,b);
-        point(-x+x_centre,-y+y_centre,r,g,b);
+        point(x+x_center,y+y_center,r,g,b);
+        point(-x+x_center,y+y_center,r,g,b);
+        point(x+x_center,-y+y_center,r,g,b);
+        point(-x+x_center,-y+y_center,r,g,b);
 
         if(x!=y)
         {
-            point(y+x_centre,x+y_centre,r,g,b);
-            point(-y+x_centre,x+y_centre,r,g,b);
-            point(y+x_centre,-x+y_centre,r,g,b);
-            point(-y+x_centre,-x+y_centre,r,g,b);
+            point(y+x_center,x+y_center,r,g,b);
+            point(-y+x_center,x+y_center,r,g,b);
+            point(y+x_center,-x+y_center,r,g,b);
+            point(-y+x_center,-x+y_center,r,g,b);
         }
     }
 }
+void MainWindow::on_ParametricCircle_clicked()
+{
+    ui->gridsize->setMinimum(1);
+    //Get the radius
+    int r0=ui->circle_radius->value();
 
+    //Set the center
+    if(ui->draw_circle->isChecked()){
+        p1.setX(ui->frame->x);
+        p1.setY(ui->frame->y);
+
+        drawParametricCircle(p1,r0);
+    }
+}
+void MainWindow::drawParametricCircle(QPoint p1, int r0){
+    int r=218,g=118,b=235;
+    //Function to draw the circle
+    int x_center=p1.x();
+    int y_center=p1.y();
+
+    int k = ui->gridsize->value();//GridSize
+
+    x_center=(x_center/k)*k+k/2;
+    y_center=(y_center/k)*k+k/2;
+
+    int x=r0*k;
+    int y=0;
+
+    point(x+x_center,y+y_center,r,g,b);
+
+    if(r0>0)
+    {
+        point(x+x_center,-y+y_center,r,g,b);
+        point(y+x_center,x+y_center,r,g,b);
+        point(-y+x_center,x+y_center,r,g,b);
+    }
+    int theta=0;
+    if(theta<=45){
+        x = r0*cos(theta*(pi/180))*k;
+        y = r0*sin(theta*(pi/180))*k;
+        theta++;
+    }
+    point(x+x_center,y+y_center,r,g,b);
+    point(-x+x_center,y+y_center,r,g,b);
+    point(x+x_center,-y+y_center,r,g,b);
+    point(-x+x_center,-y+y_center,r,g,b);
+
+    if(x!=y)
+    {
+        point(y+x_center,x+y_center,r,g,b);
+        point(-y+x_center,x+y_center,r,g,b);
+        point(y+x_center,-x+y_center,r,g,b);
+        point(-y+x_center,-x+y_center,r,g,b);
+    }
+
+}
 void MainWindow::on_BresenhamCircle_clicked()
 {
     ui->gridsize->setMinimum(1);
     //Get the radius
     int r0=ui->circle_radius->value();
 
-    //Set the centre
+    //Set the center
     if(ui->draw_circle->isChecked()){
         p1.setX(ui->frame->x);
         p1.setY(ui->frame->y);
@@ -383,13 +440,13 @@ void MainWindow::drawCircleBress(QPoint p1, int r0)
 {
     int r=218,g=118,b=235;
     //Function to draw the circle
-    int x_centre=p1.x();
-    int y_centre=p1.y();
+    int x_center=p1.x();
+    int y_center=p1.y();
 
     int k = ui->gridsize->value();//GridSize
 
-    x_centre=(x_centre/k)*k+k/2;
-    y_centre=(y_centre/k)*k+k/2;
+    x_center=(x_center/k)*k+k/2;
+    y_center=(y_center/k)*k+k/2;
 
     int y=r0*k;
     int x=0;
@@ -398,15 +455,15 @@ void MainWindow::drawCircleBress(QPoint p1, int r0)
 
     while(y>=x)
     {
-        point(x_centre+x,y_centre+y,r,g,b);
-        point(x_centre+x,y_centre-y,r,g,b);
-        point(x_centre-x,y_centre+y,r,g,b);
-        point(x_centre-x,y_centre-y,r,g,b);
+        point(x_center+x,y_center+y,r,g,b);
+        point(x_center+x,y_center-y,r,g,b);
+        point(x_center-x,y_center+y,r,g,b);
+        point(x_center-x,y_center-y,r,g,b);
 
-        point(x_centre+y,y_centre+x,r,g,b);
-        point(x_centre+y,y_centre-x,r,g,b);
-        point(x_centre-y,y_centre+x,r,g,b);
-        point(x_centre-y,y_centre-x,r,g,b);
+        point(x_center+y,y_center+x,r,g,b);
+        point(x_center+y,y_center-x,r,g,b);
+        point(x_center-y,y_center+x,r,g,b);
+        point(x_center-y,y_center-x,r,g,b);
 
         x++;
         if(d>0)
@@ -428,7 +485,7 @@ void MainWindow::on_MidpointEllipse_clicked()
     int rx=ui->ellipse_rx->value();
     int ry=ui->ellipse_ry->value();
 
-    //Set the centre
+    //Set the center
     if(ui->draw_ellipse->isChecked()){
         p1.setX(ui->frame->x);
         p1.setY(ui->frame->y);
@@ -441,13 +498,13 @@ void MainWindow::drawEllipse(QPoint p, int rx, int ry)
     //Function to draw the ellipse
     ui->gridsize->setMinimum(1);
     int r=90,g=186,b=240;
-    //Get the centre
-    int x_centre=p.x();
-    int y_centre=p.y();
+    //Get the center
+    int x_center=p.x();
+    int y_center=p.y();
     int k = ui->gridsize->value();//GridSize
 
-    x_centre=(x_centre/k)*k+k/2;
-    y_centre=(y_centre/k)*k+k/2;
+    x_center=(x_center/k)*k+k/2;
+    y_center=(y_center/k)*k+k/2;
 
     int x=0;
     int y=ry;
@@ -466,10 +523,10 @@ void MainWindow::drawEllipse(QPoint p, int rx, int ry)
 
     while(px<py)
     {
-        point(x_centre+x*k,y_centre+y*k,r,g,b);
-        point(x_centre-x*k,y_centre+y*k,r,g,b);
-        point(x_centre-x*k,y_centre-y*k,r,g,b);
-        point(x_centre+x*k,y_centre-y*k,r,g,b);
+        point(x_center+x*k,y_center+y*k,r,g,b);
+        point(x_center-x*k,y_center+y*k,r,g,b);
+        point(x_center-x*k,y_center-y*k,r,g,b);
+        point(x_center+x*k,y_center-y*k,r,g,b);
 
         x++;
         px+=twory2;
@@ -493,10 +550,10 @@ void MainWindow::drawEllipse(QPoint p, int rx, int ry)
 
     while(y>=0)
     {
-        point(x_centre+x*k,y_centre+y*k,r,g,b);
-        point(x_centre-x*k,y_centre+y*k,r,g,b);
-        point(x_centre-x*k,y_centre-y*k,r,g,b);
-        point(x_centre+x*k,y_centre-y*k,r,g,b);
+        point(x_center+x*k,y_center+y*k,r,g,b);
+        point(x_center-x*k,y_center+y*k,r,g,b);
+        point(x_center-x*k,y_center-y*k,r,g,b);
+        point(x_center+x*k,y_center-y*k,r,g,b);
 
         y--;
         py-=tworx2;
@@ -514,3 +571,5 @@ void MainWindow::drawEllipse(QPoint p, int rx, int ry)
 
     }
 }
+
+

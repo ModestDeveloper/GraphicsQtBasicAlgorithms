@@ -17,6 +17,7 @@ public slots:
     void showMousePosition(QPoint& pos);
 public:
     explicit MainWindow(QWidget *parent = nullptr);
+    QImage img;
     ~MainWindow();
 
 private slots:
@@ -41,6 +42,9 @@ private slots:
 
     void on_BresenhamCircle_clicked();
     void drawCircleBress(QPoint p1, int r0);
+
+    void on_ParametricCircle_clicked();
+    void drawParametricCircle(QPoint p1, int r);
 
     void on_MidpointEllipse_clicked();
     void drawEllipse(QPoint p, int rx, int ry);

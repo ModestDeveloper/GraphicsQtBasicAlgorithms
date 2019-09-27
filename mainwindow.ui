@@ -308,6 +308,13 @@ background-color: rgb(85, 255, 255);</string>
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_6">
          <item>
+          <widget class="QPushButton" name="SimpleLine">
+           <property name="text">
+            <string>Normal</string>
+           </property>
+          </widget>
+         </item>
+         <item>
           <widget class="QPushButton" name="DDALine">
            <property name="text">
             <string>DDA</string>
@@ -347,6 +354,13 @@ background-color: rgb(85, 255, 255);</string>
           <widget class="QPushButton" name="Midpoint">
            <property name="text">
             <string>Mid Point</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="ParametricCircle">
+           <property name="text">
+            <string>Parametric</string>
            </property>
           </widget>
          </item>
