@@ -48,18 +48,6 @@ void MainWindow::point(int x,int y,int r,int g,int b)
     ui->frame->setPixmap(QPixmap::fromImage(img));
 }
 
-//void MainWindow::point(int x,int y,int r)
-//{
-//    int a,b;
-//    r=0;
-//    for(a=-r;a<=r;a++){
-//        for(b=-r;b<=r;b++){
-//                img.setPixel(x+a,y+b,qRgb(255,0,0));
-//        }
-//    }
-//    ui->frame->setPixmap(QPixmap::fromImage(img));
-//}
-
 void MainWindow::showMousePosition(QPoint &pos)
 {
     ui->gridsize->setMinimum(1);
@@ -161,7 +149,7 @@ void MainWindow::on_ResetButton_clicked()
 void MainWindow::on_showGrid_clicked()
 {
 //    img=QImage(ui->frame->width(),ui->frame->height(),QImage::Format_RGB888);
-    int r=80,g=80,b=80;
+//    int r=80,g=80,b=80;
     ui->gridsize->setMinimum(1);
     int k = ui->gridsize->value();
 //    k = k>1 ? k: 1;
@@ -176,18 +164,22 @@ void MainWindow::on_showGrid_clicked()
 
     for(int i=0;i<img.height();i+=k)
         for(int j=0;j<img.width();j++)
-            img.setPixel(i,j,qRgb(r,g,b));
+            img.setPixel(i,j,MainWindow::gridColor);
+//            img.setPixel(i,j,qRgb(r,g,b));
+                \
 
     for(int i=0;i<img.width();i+=k)
         for(int j=0;j<img.height();j++)
-            img.setPixel(j,i,qRgb(r,g,b));
+            img.setPixel(j,i,MainWindow::gridColor);
+//            img.setPixel(j,i,qRgb(r,g,b));
 
     ui->frame->setPixmap(QPixmap::fromImage(img));
 }
 
 void MainWindow::on_DDALine_clicked()
 {
-    int r=220, g=153, b=196;
+//    int r=153, g=153, b=196;
+    int r=qRed(MainWindow::edgeColor),g=qGreen(MainWindow::edgeColor),b=qBlue(MainWindow::edgeColor);
     ui->gridsize->setMinimum(1);
     //This function draws a line between the two selected points using DDA algorithm
     int k = ui->gridsize->value();
@@ -219,13 +211,14 @@ void MainWindow::on_DDALine_clicked()
     {
         x = x + Xinc*k;
         y = y + Yinc*k;
-        point((int)(x+0.5),(int)(y+0.5),r,g,b);
+        point((int)(x+0.5),(int)(y+0.5),qRed(MainWindow::edgeColor),qGreen(MainWindow::edgeColor),qBlue(MainWindow::edgeColor));
     }
 }
 
 void MainWindow::on_BresenhamLine_clicked()
 {
-    int r=160,g=138,b=148;
+//    int r=160,g=138,b=148;
+    int r=qRed(MainWindow::edgeColor),g=qGreen(MainWindow::edgeColor),b=qBlue(MainWindow::edgeColor);
     ui->gridsize->setMinimum(1);
     int k = ui->gridsize->value();
     //Store the two points
@@ -284,16 +277,6 @@ void MainWindow::on_BresenhamLine_clicked()
             p+=2*(dx);
         }
     }
-//    else{
-//        int x=x1;
-//        int y=y1;
-//        for(int x=x1; x!=x2; x+=xinc)
-//        {
-//            point(x,y,r,g,b);
-//            x += 1;
-//            y += 1;
-//        }
-//    }
 }
 
 void MainWindow::on_Midpoint_clicked()
@@ -311,8 +294,9 @@ void MainWindow::on_Midpoint_clicked()
     }
 }
 void MainWindow::drawCircle(QPoint p1, int r0)
-{
-    int r=218,g=118,b=235;
+{    
+//    int r=218,g=118,b=235;
+    int r=qRed(MainWindow::edgeColor),g=qGreen(MainWindow::edgeColor),b=qBlue(MainWindow::edgeColor);
     //Function to draw the circle
     int x_center=p1.x();
     int y_center=p1.y();
@@ -380,7 +364,8 @@ void MainWindow::on_ParametricCircle_clicked()
     }
 }
 void MainWindow::drawParametricCircle(QPoint p1, int r0){
-    int r=218,g=118,b=235;
+//    int r=218,g=118,b=235;
+    int r=qRed(MainWindow::edgeColor),g=qGreen(MainWindow::edgeColor),b=qBlue(MainWindow::edgeColor);
     //Function to draw the circle
     int x_center=p1.x();
     int y_center=p1.y();
@@ -438,7 +423,8 @@ void MainWindow::on_BresenhamCircle_clicked()
 
 void MainWindow::drawCircleBress(QPoint p1, int r0)
 {
-    int r=218,g=118,b=235;
+//    int r=218,g=118,b=235;
+    int r=qRed(MainWindow::edgeColor),g=qGreen(MainWindow::edgeColor),b=qBlue(MainWindow::edgeColor);
     //Function to draw the circle
     int x_center=p1.x();
     int y_center=p1.y();
@@ -497,7 +483,8 @@ void MainWindow::drawEllipse(QPoint p, int rx, int ry)
 {
     //Function to draw the ellipse
     ui->gridsize->setMinimum(1);
-    int r=90,g=186,b=240;
+//    int r=90,g=186,b=240;
+    int r=qRed(MainWindow::edgeColor),g=qGreen(MainWindow::edgeColor),b=qBlue(MainWindow::edgeColor);
     //Get the center
     int x_center=p.x();
     int y_center=p.y();
@@ -572,4 +559,72 @@ void MainWindow::drawEllipse(QPoint p, int rx, int ry)
     }
 }
 
+// BUG Flood fill : on clicking the color of pixel is gridColor thus flood fill on it colors only
+//that pixel thus after flood fill click on boundary fill to make sure all pixels has white i.e
+//boundaryfill color then click floodfill
+void MainWindow::on_floodFill_clicked()
+{
+//    int x1=p1.x();
+//    int y1=p1.y();
+    int x1 = ui->frame->x;
+    int y1 = ui->frame->y;
+    int k = ui->gridsize->value();
 
+    x1=(x1/k)*k+k/2;
+    y1=(y1/k)*k+k/2;
+    QRgb current = img.pixel(x1,y1);
+    int r=qRed(MainWindow::fillColor), g=qGreen(MainWindow::fillColor), b=qBlue(MainWindow::fillColor);
+    flood_fill_util(x1,y1,k,current,r,g,b);
+
+}
+void MainWindow::flood_fill_util(int x1, int y1,int k, QRgb q1, int r,int g,int b)
+{
+    QRgb current = img.pixel(x1,y1);
+    if(x1<=0 || x1>img.width()|| y1<=0 || y1>img.height())
+        return;
+    else if(current!=q1)
+        return;
+    else if(current==qRgb(r,g,b))
+        return;
+//    if(current != gridColor)
+        point(x1,y1,r,g,b);
+
+    flood_fill_util(x1+k,y1,k,q1,r,g,b);
+    flood_fill_util(x1-k,y1,k,q1,r,g,b);
+    flood_fill_util(x1,y1+k,k,q1,r,g,b);
+    flood_fill_util(x1,y1-k,k,q1,r,g,b);
+}
+
+void MainWindow::on_boundaryFill_clicked()
+{
+//        int x1=p1.x();
+//        int y1=p1.y();
+        int x1 = ui->frame->x;
+        int y1 = ui->frame->y;
+        int k = ui->gridsize->value();
+
+        x1=(x1/k)*k+k/2;
+        y1=(y1/k)*k+k/2;
+
+        boundary_fill_util(x1,y1,k,255,255,255);
+}
+void MainWindow::boundary_fill_util(int x1, int y1, int k, int r, int g, int b)
+{
+    QRgb current;
+    current=img.pixel(x1,y1);
+
+    if(x1<=0 || x1>img.width()|| y1<=0 || y1>img.height())
+        return;
+
+
+//    if(current!=edgecolor && current!=qRgb(r,g,b))
+    if(current!=MainWindow::edgeColor && current!=qRgb(r,g,b))
+    {
+        if(current != MainWindow::gridColor)
+            point(x1,y1,255,255,255);
+        boundary_fill_util(x1+k,y1,k,r,g,b);
+        boundary_fill_util(x1-k,y1,k,r,g,b);
+        boundary_fill_util(x1,y1+k,k,r,g,b);
+        boundary_fill_util(x1,y1-k,k,r,g,b);
+    }
+}

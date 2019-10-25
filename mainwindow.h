@@ -49,9 +49,19 @@ private slots:
     void on_MidpointEllipse_clicked();
     void drawEllipse(QPoint p, int rx, int ry);
 
+    void on_floodFill_clicked();
+    void flood_fill_util(int x1, int y1,int k, QRgb q1, int r,int g,int b);
+
+    void on_boundaryFill_clicked();
+    void boundary_fill_util(int x1, int y1, int k, int r, int g, int b);
+
 private:
     Ui::MainWindow *ui;
     QPoint p1,p2;
+//    QRgb axesColor = qRgb();
+    QRgb edgeColor = qRgb(220,153,196);
+    QRgb gridColor = qRgb(80,80,80);
+    QRgb fillColor = qRgb(102,255,51);
     void point(int,int,int,int,int);
 };
 

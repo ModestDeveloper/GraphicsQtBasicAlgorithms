@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>782</width>
+    <width>1048</width>
     <height>562</height>
    </rect>
   </property>
@@ -456,6 +456,61 @@ background-color: rgb(85, 255, 255);</string>
      </item>
     </layout>
    </widget>
+   <widget class="Line" name="line_6">
+    <property name="geometry">
+     <rect>
+      <x>760</x>
+      <y>10</y>
+      <width>20</width>
+      <height>471</height>
+     </rect>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Vertical</enum>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="floodFill">
+    <property name="geometry">
+     <rect>
+      <x>780</x>
+      <y>50</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Flood Fill</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="boundaryFill">
+    <property name="geometry">
+     <rect>
+      <x>870</x>
+      <y>50</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Boundary Fill</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_8">
+    <property name="geometry">
+     <rect>
+      <x>780</x>
+      <y>20</y>
+      <width>251</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Polygon Filling Algorithms</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
  </widget>
@@ -476,8 +531,8 @@ background-color: rgb(85, 255, 255);</string>
    <slot>close()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>688</x>
-     <y>454</y>
+     <x>739</x>
+     <y>464</y>
     </hint>
     <hint type="destinationlabel">
      <x>649</x>
