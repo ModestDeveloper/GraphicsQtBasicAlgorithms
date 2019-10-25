@@ -472,7 +472,7 @@ background-color: rgb(85, 255, 255);</string>
    <widget class="QPushButton" name="floodFill">
     <property name="geometry">
      <rect>
-      <x>780</x>
+      <x>810</x>
       <y>50</y>
       <width>75</width>
       <height>23</height>
@@ -485,7 +485,7 @@ background-color: rgb(85, 255, 255);</string>
    <widget class="QPushButton" name="boundaryFill">
     <property name="geometry">
      <rect>
-      <x>870</x>
+      <x>910</x>
       <y>50</y>
       <width>75</width>
       <height>23</height>
@@ -509,6 +509,45 @@ background-color: rgb(85, 255, 255);</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="setVertex">
+    <property name="geometry">
+     <rect>
+      <x>810</x>
+      <y>80</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Set Vertex</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="clearVertex">
+    <property name="geometry">
+     <rect>
+      <x>910</x>
+      <y>80</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Clear Vertex</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="scanLineFill">
+    <property name="geometry">
+     <rect>
+      <x>860</x>
+      <y>110</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Scan Line Fill</string>
     </property>
    </widget>
   </widget>

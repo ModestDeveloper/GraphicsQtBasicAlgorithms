@@ -8,7 +8,10 @@
 #include <QPaintDevice>
 #include <QPoint>
 #include <unistd.h>
+#include<vector>
+#include<algorithm>
 #define pi 3.1415196
+using namespace std;
 //static QImage img;
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -627,4 +630,244 @@ void MainWindow::boundary_fill_util(int x1, int y1, int k, int r, int g, int b)
         boundary_fill_util(x1,y1+k,k,r,g,b);
         boundary_fill_util(x1,y1-k,k,r,g,b);
     }
+}
+
+// Scan line Algorithm
+void MainWindow::on_setVertex_clicked()
+{
+    int k=ui->gridsize->value();
+    int x=((ui->frame->x)/k)*k+k/2;
+    int y=((ui->frame->y)/k)*k+k/2;
+    EdgeList.push_back(make_pair(x,y));
+
+    int i=EdgeList.size();
+
+    if(EdgeList.size()>1)
+    {
+        storeEdgeInTable(EdgeList[i-2].first, EdgeList[i-2].second, EdgeList[i-1].first, EdgeList[i-1].second);//storage of edges in edge table.
+
+        p1.setX(EdgeList[EdgeList.size()-1].first);
+        p2.setX(EdgeList[EdgeList.size()-2].first);
+
+        p1.setY(EdgeList[EdgeList.size()-1].second);
+        p2.setY(EdgeList[EdgeList.size()-2].second);
+
+        on_BresenhamLine_clicked();
+
+    }
+
+}
+
+void MainWindow::on_clearVertex_clicked()
+{
+    // for initialising
+    EdgeList.clear();
+    initEdgeTable();
+}
+
+void MainWindow::initEdgeTable()
+{
+    int i;
+    for (i=0; i<maxHt; i++)
+    {
+        EdgeTable[i].countEdgeBucket = 0;
+    }
+
+    ActiveEdgeTuple.countEdgeBucket = 0;
+}
+
+void MainWindow::insertionSort(EdgeTableTuple *ett)
+{
+    int i,j;
+    EdgeBucket temp;
+
+    for (i = 1; i < ett->countEdgeBucket; i++)
+    {
+        temp.ymax = ett->buckets[i].ymax;
+        temp.xofymin = ett->buckets[i].xofymin;
+        temp.slopeinverse = ett->buckets[i].slopeinverse;
+        j = i - 1;
+
+        while ((temp.xofymin < ett->buckets[j].xofymin) && (j >= 0))
+        {
+            ett->buckets[j + 1].ymax = ett->buckets[j].ymax;
+            ett->buckets[j + 1].xofymin = ett->buckets[j].xofymin;
+            ett->buckets[j + 1].slopeinverse = ett->buckets[j].slopeinverse;
+            j = j - 1;
+        }
+        ett->buckets[j + 1].ymax = temp.ymax;
+        ett->buckets[j + 1].xofymin = temp.xofymin;
+        ett->buckets[j + 1].slopeinverse = temp.slopeinverse;
+    }
+}
+
+
+void MainWindow::storeEdgeInTuple (EdgeTableTuple *receiver,int ym,int xm,float slopInv)
+{
+    (receiver->buckets[(receiver)->countEdgeBucket]).ymax = ym;
+    (receiver->buckets[(receiver)->countEdgeBucket]).xofymin = (float)xm;
+    (receiver->buckets[(receiver)->countEdgeBucket]).slopeinverse = slopInv;
+
+    insertionSort(receiver);
+
+    (receiver->countEdgeBucket)++;
+
+
+}
+
+void MainWindow::storeEdgeInTable (int x1,int y1, int x2, int y2)
+{
+    float m,minv;
+    int ymaxTS,xwithyminTS, scanline;
+
+    if (x2==x1)
+    {
+        minv=0.000000;
+    }
+    else
+    {
+        m = ((float)(y2-y1))/((float)(x2-x1));
+
+        if (y2==y1)
+            return;
+
+        minv = (float)1.0/m;
+    }
+
+    if (y1>y2)
+    {
+        scanline=y2;
+        ymaxTS=y1;
+        xwithyminTS=x2;
+    }
+    else
+    {
+        scanline=y1;
+        ymaxTS=y2;
+        xwithyminTS=x1;
+    }
+    storeEdgeInTuple(&EdgeTable[scanline],ymaxTS,xwithyminTS,minv);
+
+
+}
+
+void MainWindow::removeEdgeByYmax(EdgeTableTuple *Tup,int yy)
+{
+    int i,j;
+    for (i=0; i< Tup->countEdgeBucket; i++)
+    {
+        if (Tup->buckets[i].ymax == yy)
+        {
+            for ( j = i ; j < Tup->countEdgeBucket -1 ; j++ )
+            {
+                Tup->buckets[j].ymax =Tup->buckets[j+1].ymax;
+                Tup->buckets[j].xofymin =Tup->buckets[j+1].xofymin;
+                Tup->buckets[j].slopeinverse = Tup->buckets[j+1].slopeinverse;
+            }
+            Tup->countEdgeBucket--;
+            i--;
+        }
+    }
+}
+
+
+void MainWindow::updatexbyslopeinv(EdgeTableTuple *Tup)
+{
+    int i;
+
+    for (i=0; i<Tup->countEdgeBucket; i++)
+    {
+        (Tup->buckets[i]).xofymin =(Tup->buckets[i]).xofymin + (Tup->buckets[i]).slopeinverse;
+    }
+}
+
+void MainWindow::on_scanLineFill_clicked()
+{
+    int i, j, x1, ymax1, x2, ymax2, FillFlag = 0, coordCount;
+
+    for (i=0; i<maxHt; i++)
+    {
+        for (j=0; j<EdgeTable[i].countEdgeBucket; j++)
+        {
+            storeEdgeInTuple(&ActiveEdgeTuple,EdgeTable[i].buckets[j].
+                             ymax,EdgeTable[i].buckets[j].xofymin,
+                             EdgeTable[i].buckets[j].slopeinverse);
+        }
+
+        removeEdgeByYmax(&ActiveEdgeTuple, i);
+
+        insertionSort(&ActiveEdgeTuple);
+
+        j = 0;
+        FillFlag = 0;
+        coordCount = 0;
+        x1 = 0;
+        x2 = 0;
+        ymax1 = 0;
+        ymax2 = 0;
+        while (j<ActiveEdgeTuple.countEdgeBucket)
+        {
+            if (coordCount%2==0)
+            {
+                x1 = (int)(ActiveEdgeTuple.buckets[j].xofymin);
+                ymax1 = ActiveEdgeTuple.buckets[j].ymax;
+                if (x1==x2)
+                {
+                    if (((x1==ymax1)&&(x2!=ymax2))||((x1!=ymax1)&&(x2==ymax2)))
+                    {
+                        x2 = x1;
+                        ymax2 = ymax1;
+                    }
+
+                    else
+                    {
+                        coordCount++;
+                    }
+                }
+
+                else
+                {
+                    coordCount++;
+                }
+            }
+            else
+            {
+                x2 = (int)ActiveEdgeTuple.buckets[j].xofymin;
+                ymax2 = ActiveEdgeTuple.buckets[j].ymax;
+
+                FillFlag = 0;
+                if (x1==x2)
+                {
+                    if (((x1==ymax1)&&(x2!=ymax2))||((x1!=ymax1)&&(x2==ymax2)))
+                    {
+                        x1 = x2;
+                        ymax1 = ymax2;
+                    }
+                    else
+                    {
+                        coordCount++;
+                        FillFlag = 1;
+                    }
+                }
+                else
+                {
+                    coordCount++;
+                    FillFlag = 1;
+                }
+
+                if(FillFlag)
+                {
+                    p1.setX(x1);p1.setY(i);
+                    p2.setX(x2);p2.setY(i);
+                    on_BresenhamLine_clicked();
+                }
+
+            }
+
+            j++;
+        }
+        updatexbyslopeinv(&ActiveEdgeTuple);
+    }
+
+    EdgeList.clear();
 }
