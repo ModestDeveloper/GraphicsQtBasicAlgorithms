@@ -15,7 +15,7 @@ using namespace std;
 //static QImage img;
 
 MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),img(450,450,QImage::Format_RGB888),
+    QMainWindow(parent),img(541,541,QImage::Format_RGB888),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
