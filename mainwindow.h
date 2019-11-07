@@ -11,7 +11,7 @@
 #define maxWd 800
 
 namespace Ui {
-class MainWindow;
+    class MainWindow;
 }
 
 class MainWindow : public QMainWindow
@@ -65,6 +65,29 @@ private slots:
     void on_clearVertex_clicked();
 
     void on_scanLineFill_clicked();
+    int* matMul3x3(double mat[3][3],int coord[3]);
+    void translate(int tx,int ty);
+    void rotate(int angle,int piv_x,int piv_y);
+    void reflect_x();
+    void drawPoly();
+
+    void on_translate_clicked();
+
+    void on_scale_clicked();
+
+    void on_rotate_clicked();
+
+    void on_shear_clicked();
+
+    void on_reflect_clicked();
+
+    void on_bez_clear_clicked();
+
+    void on_bez_init_clicked();
+
+    void on_draw_bez_clicked();
+
+    void bezierCurve();
 
 private:
     Ui::MainWindow *ui;
@@ -91,8 +114,12 @@ private:
         int countEdgeBucket;    //no. of edgebuckets
         EdgeBucket buckets[maxVer];
     }EdgeTableTuple;
+
     EdgeTableTuple EdgeTable[maxHt], ActiveEdgeTuple;
+
     std::vector<std::pair<int,int> > EdgeList;
+    std::vector<std::pair<int,int> > BezList;
+
     void storeEdgeInTable (int x1,int y1, int x2, int y2);
     void storeEdgeInTuple (EdgeTableTuple *receiver,int ym,int xm,float slopInv);
     void insertionSort(EdgeTableTuple *ett);

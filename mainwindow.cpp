@@ -182,7 +182,7 @@ void MainWindow::on_showGrid_clicked()
 void MainWindow::on_DDALine_clicked()
 {
 //    int r=153, g=153, b=196;
-    int r=qRed(MainWindow::edgeColor),g=qGreen(MainWindow::edgeColor),b=qBlue(MainWindow::edgeColor);
+//    int r=qRed(MainWindow::edgeColor),g=qGreen(MainWindow::edgeColor),b=qBlue(MainWindow::edgeColor);
     ui->gridsize->setMinimum(1);
     //This function draws a line between the two selected points using DDA algorithm
     int k = ui->gridsize->value();
@@ -870,4 +870,275 @@ void MainWindow::on_scanLineFill_clicked()
     }
 
     EdgeList.clear();
+}
+
+
+// *************** TRANSFORMATIONS **********************
+
+int* MainWindow::matMul3x3(double mat[3][3],int coord[3])
+{
+    int i,k,res[3];
+    for (i = 0; i < 3; i++)
+    {
+        res[i]= 0;
+        for (k = 0; k < 3; k++)
+            res[i] += (int)(mat[i][k]*(double)coord[k]);
+
+    }
+    return res;
+}
+
+void MainWindow::translate(int tx,int ty)
+{
+    int i,len=EdgeList.size();
+    // matrix for translation
+    double mat[3][3]={{1,0,(double)tx},{0,1,(double)ty},{0,0,1}};
+
+    for(i=0;i<len;i++)
+    {
+        int* coord=(int*)malloc(3*sizeof(int));
+        coord[0]=EdgeList[i].first;
+        coord[1]=EdgeList[i].second;
+        coord[2]=1;
+        coord=matMul3x3(mat,coord);
+        EdgeList[i].first=coord[0]/coord[2];
+        EdgeList[i].second=coord[1]/coord[2];
+    }
+}
+
+void MainWindow::rotate(int angle,int piv_x,int piv_y)
+{
+    double dang=(double)angle*M_PI/180.0;
+    double sinang=sin(dang);
+    double cosang=cos(dang);
+
+    //Point about which to be scaled
+
+
+    int i,len=EdgeList.size();
+
+    // matrix for rotation
+    double mat[3][3]={{cosang,-sinang,0},{sinang,cosang,0},{0,0,1}};
+
+    for(i=0;i<len;i++)
+    {
+        int* coord=(int*)malloc(3*sizeof(int));
+        coord[0]=EdgeList[i].first-piv_x;
+        coord[1]=piv_y-EdgeList[i].second;
+        coord[2]=1;
+        coord=matMul3x3(mat,coord);
+
+        EdgeList[i].first=coord[0]/coord[2]+piv_x;
+        EdgeList[i].second=piv_y-coord[1]/coord[2];
+    }
+}
+
+void MainWindow::reflect_x()
+{
+    int i,len=EdgeList.size();
+
+    // matrix for reflection
+    double mat[3][3]={{1,0,0},{0,-1,0},{0,0,1}};
+
+    for(i=0;i<len;i++)
+    {
+        int* coord=(int*)malloc(3*sizeof(int));
+        coord[0]=EdgeList[i].first;
+        coord[1]=EdgeList[i].second;
+        coord[2]=1;
+        coord=matMul3x3(mat,coord);
+        EdgeList[i].first=coord[0]/coord[2];
+//        EdgeList[i].first-=img.width()/2;
+        EdgeList[i].second=coord[1]/coord[2];
+        EdgeList[i].second=img.height()/2-EdgeList[i].second;
+    }
+}
+
+void MainWindow::drawPoly()
+{
+    int i,len=EdgeList.size()-1;
+    //Reset the screen and draw the grid
+    //on_showgrid_clicked();
+
+    // Draw the polygon
+    for(i=0;i<len;i++)
+    {
+        p1.setX(EdgeList[i].first);
+        p2.setX(EdgeList[(i+1)%len].first);
+
+        p1.setY(EdgeList[i].second);
+        p2.setY(EdgeList[(i+1)%len].second);
+
+        on_BresenhamLine_clicked();
+    }
+}
+
+void MainWindow::on_translate_clicked()
+{
+    int k =  ui->gridsize->value();
+    int tx = ui->trans_x->value();
+    int ty = ui->trans_y->value();
+//    tx*=k;
+//    ty*=k;
+    tx=-tx;
+    ty=-ty;
+
+    translate(tx,ty);
+
+    drawPoly();
+}
+
+void MainWindow::on_scale_clicked()
+{
+    int sx=ui->scl_x->value();
+    int sy=ui->scl_y->value();
+    //Point about which to be scaled
+    int piv_x=p1.x();
+    int piv_y=p1.y();
+
+    int i,len=EdgeList.size();
+
+    // matrix for scaling
+    double mat[3][3]={{(double)sx,0,0},{0,(double)sy,0},{0,0,1}};
+
+    for(i=0;i<len;i++)
+    {
+        int* coord=(int*)malloc(3*sizeof(int));
+        coord[0]=EdgeList[i].first-piv_x;
+        coord[1]=piv_y-EdgeList[i].second;
+        coord[2]=1;
+        coord=matMul3x3(mat,coord);
+        EdgeList[i].first=coord[0]/coord[2]+piv_x;
+        EdgeList[i].second=piv_y-coord[1]/coord[2];
+    }
+    drawPoly();
+}
+
+void MainWindow::on_rotate_clicked()
+{
+    int angle=ui->rot->value();
+    int piv_x=p1.x();
+    int piv_y=p1.y();
+    rotate(angle,piv_x,piv_y);
+    drawPoly();
+}
+
+void MainWindow::on_shear_clicked()
+{
+    int shx=ui->shr_x->value();
+    int shy=ui->shr_y->value();
+    //Point about which to be scaled
+    int piv_x=p1.x();
+    int piv_y=p1.y();
+
+    int i,len=EdgeList.size();
+
+    // matrix for scaling
+    double mat[3][3]={{1,(double)shx,0},{(double)shy,1,0},{0,0,1}};
+
+    for(i=0;i<len;i++)
+    {
+        int* coord=(int*)malloc(3*sizeof(int));
+        coord[0]=EdgeList[i].first-piv_x;
+        coord[1]=piv_y-EdgeList[i].second;
+        coord[2]=1;
+        coord=matMul3x3(mat,coord);
+        EdgeList[i].first=coord[0]/coord[2]+piv_x;
+        EdgeList[i].second=piv_y-coord[1]/coord[2];
+    }
+    drawPoly();
+}
+
+void MainWindow::on_reflect_clicked()
+{
+    int x1=p1.x();
+    int y1=p1.y();
+
+    int x2=p2.x();
+    int y2=p2.y();
+
+//    double m=(double)(y2-y1)/(double)(x2-x1);
+//    double b=-m*x1+y1;
+//    b=img.height()/2-b;
+
+//    translate(0,-b);
+//    int ang=(int)(atan(m));
+//    rotate(-ang,img.width()/2,img.height()/2);
+//    reflect_x();
+//    rotate(ang,img.width()/2,img.height()/2);
+//    translate(0,b);
+
+//    drawPoly();
+
+    int a=(y2-y1);
+    int b=(x1-x2);
+    int c=-y1*b-x1*a;
+
+    int i,len=EdgeList.size();
+    for(i=0;i<len;i++)
+    {
+        int num=-2*(a*EdgeList[i].first+b*EdgeList[i].second+c);
+        int den=a*a+b*b;
+        double temp_x=a*(double)num/(double)den+EdgeList[i].first;
+        double temp_y=b*(double)num/(double)den+EdgeList[i].second;
+
+        EdgeList[i].first=(int)temp_x;
+        EdgeList[i].second=(int)temp_y;
+    }
+    drawPoly();
+}
+
+
+
+
+
+
+///********************* Bezier Curve 4 points *******************
+
+void MainWindow::on_bez_clear_clicked()
+{
+    BezList.clear();
+}
+
+void MainWindow::on_bez_init_clicked()
+{
+    int k=ui->gridsize->value();
+    int x=((ui->frame->x)/k)*k+k/2;
+    int y=((ui->frame->y)/k)*k+k/2;
+    BezList.push_back(make_pair(x,y));
+
+    int i=BezList.size();
+
+    if(BezList.size()>1)
+    {
+        storeEdgeInTable(BezList[i-2].first, BezList[i-2].second, BezList[i-1].first, BezList[i-1].second);//storage of edges in edge table.
+
+        p1.setX(BezList[BezList.size()-1].first);
+        p2.setX(BezList[BezList.size()-2].first);
+
+        p1.setY(BezList[BezList.size()-1].second);
+        p2.setY(BezList[BezList.size()-2].second);
+
+        on_BresenhamLine_clicked();
+
+    }
+}
+
+void MainWindow::bezierCurve()
+{
+    double xu = 0.0 , yu = 0.0 , u = 0.0 ;
+    int i = 0 ;
+    for(u = 0.0 ; u <= 1.0 ; u += 0.0001)
+    {
+        xu = pow(1-u,3)*BezList[0].first+3*u*pow(1-u,2)*BezList[1].first+3*pow(u,2)*(1-u)*BezList[2].first+pow(u,3)*BezList[3].first;
+        yu = pow(1-u,3)*BezList[0].second+3*u*pow(1-u,2)*BezList[1].second+3*pow(u,2)*(1-u)*BezList[2].second+pow(u,3)*BezList[3].second;
+        point((int)xu , (int)yu,255,0,0) ;
+    }
+}
+
+
+
+void MainWindow::on_draw_bez_clicked()
+{
+    bezierCurve();
 }

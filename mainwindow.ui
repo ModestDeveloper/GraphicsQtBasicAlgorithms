@@ -89,7 +89,7 @@ background-color: rgb(85, 255, 255);</string>
     <property name="geometry">
      <rect>
       <x>490</x>
-      <y>460</y>
+      <y>500</y>
       <width>251</width>
       <height>31</height>
      </rect>
@@ -137,7 +137,7 @@ background-color: rgb(85, 255, 255);</string>
       <x>490</x>
       <y>10</y>
       <width>251</width>
-      <height>441</height>
+      <height>471</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_13">
@@ -462,7 +462,7 @@ background-color: rgb(85, 255, 255);</string>
       <x>760</x>
       <y>10</y>
       <width>20</width>
-      <height>471</height>
+      <height>521</height>
      </rect>
     </property>
     <property name="orientation">
@@ -472,8 +472,8 @@ background-color: rgb(85, 255, 255);</string>
    <widget class="QPushButton" name="floodFill">
     <property name="geometry">
      <rect>
-      <x>810</x>
-      <y>50</y>
+      <x>830</x>
+      <y>20</y>
       <width>75</width>
       <height>23</height>
      </rect>
@@ -485,8 +485,8 @@ background-color: rgb(85, 255, 255);</string>
    <widget class="QPushButton" name="boundaryFill">
     <property name="geometry">
      <rect>
-      <x>910</x>
-      <y>50</y>
+      <x>930</x>
+      <y>20</y>
       <width>75</width>
       <height>23</height>
      </rect>
@@ -498,8 +498,8 @@ background-color: rgb(85, 255, 255);</string>
    <widget class="QLabel" name="label_8">
     <property name="geometry">
      <rect>
-      <x>780</x>
-      <y>20</y>
+      <x>790</x>
+      <y>0</y>
       <width>251</width>
       <height>16</height>
      </rect>
@@ -514,8 +514,8 @@ background-color: rgb(85, 255, 255);</string>
    <widget class="QPushButton" name="setVertex">
     <property name="geometry">
      <rect>
-      <x>810</x>
-      <y>80</y>
+      <x>830</x>
+      <y>50</y>
       <width>75</width>
       <height>23</height>
      </rect>
@@ -527,27 +527,412 @@ background-color: rgb(85, 255, 255);</string>
    <widget class="QPushButton" name="clearVertex">
     <property name="geometry">
      <rect>
-      <x>910</x>
+      <x>930</x>
+      <y>50</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Clear Vertices</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="scanLineFill">
+    <property name="geometry">
+     <rect>
+      <x>880</x>
       <y>80</y>
       <width>75</width>
       <height>23</height>
      </rect>
     </property>
     <property name="text">
-     <string>Clear Vertex</string>
+     <string>Scan Line Fill</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="scanLineFill">
+   <widget class="Line" name="line_7">
     <property name="geometry">
      <rect>
-      <x>860</x>
+      <x>780</x>
       <y>110</y>
+      <width>71</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_9">
+    <property name="geometry">
+     <rect>
+      <x>840</x>
+      <y>110</y>
+      <width>151</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Transformations</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton">
+    <property name="geometry">
+     <rect>
+      <x>810</x>
+      <y>140</y>
       <width>75</width>
       <height>23</height>
      </rect>
     </property>
     <property name="text">
-     <string>Scan Line Fill</string>
+     <string>Set Vertex</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_2">
+    <property name="geometry">
+     <rect>
+      <x>910</x>
+      <y>140</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Clear Vertices</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_12">
+    <property name="geometry">
+     <rect>
+      <x>870</x>
+      <y>210</y>
+      <width>31</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>x:</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_13">
+    <property name="geometry">
+     <rect>
+      <x>960</x>
+      <y>170</y>
+      <width>31</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>y:</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_14">
+    <property name="geometry">
+     <rect>
+      <x>870</x>
+      <y>170</y>
+      <width>31</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>x:</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="rotate">
+    <property name="geometry">
+     <rect>
+      <x>780</x>
+      <y>250</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Rotate</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_15">
+    <property name="geometry">
+     <rect>
+      <x>960</x>
+      <y>210</y>
+      <width>31</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>y:</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_20">
+    <property name="geometry">
+     <rect>
+      <x>870</x>
+      <y>290</y>
+      <width>31</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>x:</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="scale">
+    <property name="geometry">
+     <rect>
+      <x>780</x>
+      <y>210</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Scale</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="translate">
+    <property name="geometry">
+     <rect>
+      <x>780</x>
+      <y>170</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Translate</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_21">
+    <property name="geometry">
+     <rect>
+      <x>960</x>
+      <y>290</y>
+      <width>31</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>y:</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="shear">
+    <property name="geometry">
+     <rect>
+      <x>780</x>
+      <y>290</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Shear</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="reflect">
+    <property name="geometry">
+     <rect>
+      <x>820</x>
+      <y>320</y>
+      <width>181</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Reflect about last drawn line</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_17">
+    <property name="geometry">
+     <rect>
+      <x>890</x>
+      <y>250</y>
+      <width>31</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>angle:</string>
+    </property>
+   </widget>
+   <widget class="QSpinBox" name="trans_x">
+    <property name="geometry">
+     <rect>
+      <x>890</x>
+      <y>170</y>
+      <width>42</width>
+      <height>22</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QSpinBox" name="trans_y">
+    <property name="geometry">
+     <rect>
+      <x>980</x>
+      <y>170</y>
+      <width>42</width>
+      <height>22</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QSpinBox" name="scl_x">
+    <property name="geometry">
+     <rect>
+      <x>890</x>
+      <y>210</y>
+      <width>42</width>
+      <height>22</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QSpinBox" name="scl_y">
+    <property name="geometry">
+     <rect>
+      <x>980</x>
+      <y>210</y>
+      <width>42</width>
+      <height>22</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QSpinBox" name="rot">
+    <property name="geometry">
+     <rect>
+      <x>930</x>
+      <y>250</y>
+      <width>42</width>
+      <height>22</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QSpinBox" name="shr_x">
+    <property name="geometry">
+     <rect>
+      <x>890</x>
+      <y>290</y>
+      <width>42</width>
+      <height>22</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QSpinBox" name="shr_y">
+    <property name="geometry">
+     <rect>
+      <x>980</x>
+      <y>290</y>
+      <width>42</width>
+      <height>22</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="Line" name="line_8">
+    <property name="geometry">
+     <rect>
+      <x>780</x>
+      <y>340</y>
+      <width>261</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_22">
+    <property name="geometry">
+     <rect>
+      <x>880</x>
+      <y>490</y>
+      <width>61</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Bezier Curve</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="bez_clear">
+    <property name="geometry">
+     <rect>
+      <x>780</x>
+      <y>510</y>
+      <width>81</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Clear Points</string>
+    </property>
+   </widget>
+   <widget class="Line" name="line_9">
+    <property name="geometry">
+     <rect>
+      <x>950</x>
+      <y>490</y>
+      <width>91</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
+    </property>
+   </widget>
+   <widget class="Line" name="line_10">
+    <property name="geometry">
+     <rect>
+      <x>780</x>
+      <y>490</y>
+      <width>91</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="bez_init">
+    <property name="geometry">
+     <rect>
+      <x>870</x>
+      <y>510</y>
+      <width>81</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Set 4 points</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="draw_bez">
+    <property name="geometry">
+     <rect>
+      <x>960</x>
+      <y>510</y>
+      <width>81</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Draw Curve</string>
+    </property>
+   </widget>
+   <widget class="Line" name="line_11">
+    <property name="geometry">
+     <rect>
+      <x>970</x>
+      <y>110</y>
+      <width>71</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
     </property>
    </widget>
   </widget>
@@ -576,6 +961,38 @@ background-color: rgb(85, 255, 255);</string>
     <hint type="destinationlabel">
      <x>649</x>
      <y>403</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>setVertex</receiver>
+   <slot>click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>832</x>
+     <y>178</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>832</x>
+     <y>93</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_2</sender>
+   <signal>clicked()</signal>
+   <receiver>clearVertex</receiver>
+   <slot>click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>931</x>
+     <y>171</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>934</x>
+     <y>93</y>
     </hint>
    </hints>
   </connection>
