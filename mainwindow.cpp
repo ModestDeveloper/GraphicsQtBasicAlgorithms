@@ -917,7 +917,8 @@ void MainWindow::drawPoly()
     }
 }
 
-void MainWindow::translate(int tx,int ty){
+void MainWindow::translate(int tx,int ty)
+{
     int i,len=EdgeList.size();
     // matrix for translation
 //    double mat[3][3]={{1,0,0},{0,1,0},{(double)tx,(double)ty,1}};
@@ -938,7 +939,6 @@ void MainWindow::translate(int tx,int ty){
         EdgeList[i].second=coord[1]/*/coord[2]*/;
     }
 }
-
 void MainWindow::on_translate_clicked()
 {
     int k =  ui->gridsize->value();
@@ -1029,7 +1029,7 @@ void MainWindow::on_scale_clicked()
     int i,len=EdgeList.size();
 
     // matrix for scaling
-    double mat[3][3]={{(double)sx,0,0},{0,(double)sy,0},{0,0,1}};
+//    double mat[3][3]={{(double)sx,0,0},{0,(double)sy,0},{0,0,1}};
 
     for(i=0;i<len;i++)
     {
@@ -1038,6 +1038,8 @@ void MainWindow::on_scale_clicked()
         coord[1]=piv_y-EdgeList[i].second;
         coord[2]=1;
 //        coord=matMul3x3(mat,coord);
+        coord[0]=sx*coord[0];
+        coord[1]=sy*coord[1];
         EdgeList[i].first=coord[0]/coord[2]+piv_x;
         EdgeList[i].second=piv_y-coord[1]/coord[2];
     }
@@ -1056,7 +1058,7 @@ void MainWindow::on_shear_clicked()
     int i,len=EdgeList.size();
 
     // matrix for scaling
-    double mat[3][3]={{1,(double)shx,0},{(double)shy,1,0},{0,0,1}};
+//    double mat[3][3]={{1,(double)shx,0},{(double)shy,1,0},{0,0,1}};
 
     for(i=0;i<len;i++)
     {
@@ -1065,12 +1067,16 @@ void MainWindow::on_shear_clicked()
         coord[1]=piv_y-EdgeList[i].second;
         coord[2]=1;
 //        coord=matMul3x3(mat,coord);
+        int temp_x = coord[0];
+        int temp_y = coord[1];
+        coord[0] = temp_x + shx*temp_y;
+        coord[1] = temp_y + shy*temp_x;
         EdgeList[i].first=coord[0]/coord[2]+piv_x;
         EdgeList[i].second=piv_y-coord[1]/coord[2];
     }
     drawPoly();
 }
-
+//reflection about arbitrary line
 void MainWindow::on_reflect_clicked()
 {
     int x1=p1.x();
