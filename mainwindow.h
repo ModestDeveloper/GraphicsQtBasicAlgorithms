@@ -65,7 +65,9 @@ private slots:
     void on_clearVertex_clicked();
 
     void on_scanLineFill_clicked();
-    int* matMul3x3(double mat[3][3],int coord[3]);
+
+//    void matMul3x3(double mat[3][3],int (&coord)[3]);
+
     void translate(int tx,int ty);
     void rotate(int angle,int piv_x,int piv_y);
     void reflect_x();
@@ -89,6 +91,8 @@ private slots:
 
     void bezierCurve();
 
+    void on_setPivot_clicked();
+
 private:
     Ui::MainWindow *ui;
     QPoint p1,p2;
@@ -96,6 +100,7 @@ private:
     QRgb edgeColor = qRgb(220,153,196);
     QRgb gridColor = qRgb(80,80,80);
     QRgb fillColor = qRgb(102,255,51);
+//    QRgb fillColor = qRgb(0,111,114);
     void point(int,int,int,int,int);
 
     typedef struct edgebucket

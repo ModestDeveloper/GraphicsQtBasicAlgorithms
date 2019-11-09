@@ -701,7 +701,6 @@ void MainWindow::insertionSort(EdgeTableTuple *ett)
     }
 }
 
-
 void MainWindow::storeEdgeInTuple (EdgeTableTuple *receiver,int ym,int xm,float slopInv)
 {
     (receiver->buckets[(receiver)->countEdgeBucket]).ymax = ym;
@@ -769,7 +768,6 @@ void MainWindow::removeEdgeByYmax(EdgeTableTuple *Tup,int yy)
         }
     }
 }
-
 
 void MainWindow::updatexbyslopeinv(EdgeTableTuple *Tup)
 {
@@ -875,40 +873,100 @@ void MainWindow::on_scanLineFill_clicked()
 
 // *************** TRANSFORMATIONS **********************
 
-int* MainWindow::matMul3x3(double mat[3][3],int coord[3])
-{
-    int i,k,res[3];
-    for (i = 0; i < 3; i++)
-    {
-        res[i]= 0;
-        for (k = 0; k < 3; k++)
-            res[i] += (int)(mat[i][k]*(double)coord[k]);
+//void MainWindow::matMul3x3(double mat[3][3],int (&coord)[3])
+//{
+//    int i,k,res[3];
+//    for (i = 0; i < 3; i++)
+//    {
+//        res[i]= 0;
+//        for (k = 0; k < 3; k++)
+//            res[i] += (int)((double)((coord)[k]) * mat[k][i]);
 
-    }
-    return res;
-}
+//    }
+//    coord[0] = res[0];
+//    coord[1] = res[1];
+//    coord[2] = res[2];
+//    //return res;
+//}
 
-void MainWindow::translate(int tx,int ty)
+void MainWindow::drawPoly()
 {
     int i,len=EdgeList.size();
+    int r=qRed(MainWindow::edgeColor),g=qGreen(MainWindow::edgeColor),b=qBlue(MainWindow::edgeColor);
+    //Reset the screen and draw the grid
+//    on_showgrid_clicked();
+//    on_show_axes_clicked();
+
+    // Draw the polygon or point
+    if(len==1){
+        p1.setX(EdgeList[0].first);
+        p1.setY(EdgeList[0].second);
+        point(p1.x(),p1.y(),r,g,b);
+    }
+    else{
+        for(i=0;i<len-1;i++)
+        {
+            p1.setX(EdgeList[i].first);
+            p1.setY(EdgeList[i].second);
+
+            p2.setX(EdgeList[(i+1)%len].first);
+            p2.setY(EdgeList[(i+1)%len].second);
+
+            on_BresenhamLine_clicked();
+        }
+    }
+}
+
+void MainWindow::translate(int tx,int ty){
+    int i,len=EdgeList.size();
     // matrix for translation
-    double mat[3][3]={{1,0,(double)tx},{0,1,(double)ty},{0,0,1}};
+//    double mat[3][3]={{1,0,0},{0,1,0},{(double)tx,(double)ty,1}};
 
     for(i=0;i<len;i++)
     {
-        int* coord=(int*)malloc(3*sizeof(int));
+//        int* coord=(int*)malloc(3*sizeof(int));
+        int coord[3];
         coord[0]=EdgeList[i].first;
         coord[1]=EdgeList[i].second;
         coord[2]=1;
-        coord=matMul3x3(mat,coord);
-        EdgeList[i].first=coord[0]/coord[2];
-        EdgeList[i].second=coord[1]/coord[2];
+//        matMul3x3(mat,coord);
+        coord[0] = coord[0]-tx;
+        coord[1] = coord[1]+ty;
+//        coord[1] = coord[1]-ty;
+        coord[2] = coord[2];
+        EdgeList[i].first=coord[0]/*/coord[2]*/;
+        EdgeList[i].second=coord[1]/*/coord[2]*/;
     }
 }
 
+void MainWindow::on_translate_clicked()
+{
+    int k =  ui->gridsize->value();
+    int tx = ui->trans_x->value();
+    int ty = ui->trans_y->value();
+    tx*=k;
+    ty*=k;
+    translate(tx,ty);
+    drawPoly();
+}
+
+void MainWindow::on_rotate_clicked()
+{
+    int angle=ui->rot->value();
+    int piv_x=p1.x();
+    int piv_y=p1.y();
+    rotate(angle,piv_x,piv_y);
+    drawPoly();
+}
+void MainWindow::on_setPivot_clicked()
+{
+    p1.setX(ui->frame->x);
+    p1.setY(ui->frame->y);
+}
 void MainWindow::rotate(int angle,int piv_x,int piv_y)
 {
     double dang=(double)angle*M_PI/180.0;
+    // for clockwise rotation change - ve sign
     double sinang=sin(dang);
     double cosang=cos(dang);
 
@@ -918,18 +976,22 @@ void MainWindow::rotate(int angle,int piv_x,int piv_y)
     int i,len=EdgeList.size();
 
     // matrix for rotation
-    double mat[3][3]={{cosang,-sinang,0},{sinang,cosang,0},{0,0,1}};
+//    double mat[3][3]={{cosang,-sinang,0},{sinang,cosang,0},{0,0,1}};
 
     for(i=0;i<len;i++)
     {
         int* coord=(int*)malloc(3*sizeof(int));
         coord[0]=EdgeList[i].first-piv_x;
-        coord[1]=piv_y-EdgeList[i].second;
+        coord[1]=EdgeList[i].second-piv_y;
         coord[2]=1;
-        coord=matMul3x3(mat,coord);
+//        coord=matMul3x3(mat,coord);
+        int temp_x = coord[0];
+        int temp_y = coord[1];
+        coord[0] = (int)(temp_x*cosang - temp_y*sinang);
+        coord[1] = (int)(temp_x*sinang + temp_y*cosang);
 
         EdgeList[i].first=coord[0]/coord[2]+piv_x;
-        EdgeList[i].second=piv_y-coord[1]/coord[2];
+        EdgeList[i].second=coord[1]/coord[2]+piv_y;
     }
 }
 
@@ -946,7 +1008,7 @@ void MainWindow::reflect_x()
         coord[0]=EdgeList[i].first;
         coord[1]=EdgeList[i].second;
         coord[2]=1;
-        coord=matMul3x3(mat,coord);
+//        coord=matMul3x3(mat,coord);
         EdgeList[i].first=coord[0]/coord[2];
 //        EdgeList[i].first-=img.width()/2;
         EdgeList[i].second=coord[1]/coord[2];
@@ -954,39 +1016,7 @@ void MainWindow::reflect_x()
     }
 }
 
-void MainWindow::drawPoly()
-{
-    int i,len=EdgeList.size()-1;
-    //Reset the screen and draw the grid
-    //on_showgrid_clicked();
 
-    // Draw the polygon
-    for(i=0;i<len;i++)
-    {
-        p1.setX(EdgeList[i].first);
-        p2.setX(EdgeList[(i+1)%len].first);
-
-        p1.setY(EdgeList[i].second);
-        p2.setY(EdgeList[(i+1)%len].second);
-
-        on_BresenhamLine_clicked();
-    }
-}
-
-void MainWindow::on_translate_clicked()
-{
-    int k =  ui->gridsize->value();
-    int tx = ui->trans_x->value();
-    int ty = ui->trans_y->value();
-//    tx*=k;
-//    ty*=k;
-    tx=-tx;
-    ty=-ty;
-
-    translate(tx,ty);
-
-    drawPoly();
-}
 
 void MainWindow::on_scale_clicked()
 {
@@ -1007,21 +1037,13 @@ void MainWindow::on_scale_clicked()
         coord[0]=EdgeList[i].first-piv_x;
         coord[1]=piv_y-EdgeList[i].second;
         coord[2]=1;
-        coord=matMul3x3(mat,coord);
+//        coord=matMul3x3(mat,coord);
         EdgeList[i].first=coord[0]/coord[2]+piv_x;
         EdgeList[i].second=piv_y-coord[1]/coord[2];
     }
     drawPoly();
 }
 
-void MainWindow::on_rotate_clicked()
-{
-    int angle=ui->rot->value();
-    int piv_x=p1.x();
-    int piv_y=p1.y();
-    rotate(angle,piv_x,piv_y);
-    drawPoly();
-}
 
 void MainWindow::on_shear_clicked()
 {
@@ -1042,7 +1064,7 @@ void MainWindow::on_shear_clicked()
         coord[0]=EdgeList[i].first-piv_x;
         coord[1]=piv_y-EdgeList[i].second;
         coord[2]=1;
-        coord=matMul3x3(mat,coord);
+//        coord=matMul3x3(mat,coord);
         EdgeList[i].first=coord[0]/coord[2]+piv_x;
         EdgeList[i].second=piv_y-coord[1]/coord[2];
     }
@@ -1120,7 +1142,6 @@ void MainWindow::on_bez_init_clicked()
         p2.setY(BezList[BezList.size()-2].second);
 
         on_BresenhamLine_clicked();
-
     }
 }
 
@@ -1136,9 +1157,9 @@ void MainWindow::bezierCurve()
     }
 }
 
-
-
 void MainWindow::on_draw_bez_clicked()
 {
     bezierCurve();
 }
+
+
