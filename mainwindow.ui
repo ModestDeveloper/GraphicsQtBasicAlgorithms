@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1195</width>
+    <width>1237</width>
     <height>562</height>
    </rect>
   </property>
@@ -806,8 +806,8 @@ background-color: rgb(85, 255, 255);</string>
     <property name="geometry">
      <rect>
       <x>930</x>
-      <y>340</y>
-      <width>261</width>
+      <y>350</y>
+      <width>101</width>
       <height>20</height>
      </rect>
     </property>
@@ -932,6 +932,226 @@ background-color: rgb(85, 255, 255);</string>
      <string>Set Pivot</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="clip_poly">
+    <property name="geometry">
+     <rect>
+      <x>1080</x>
+      <y>470</y>
+      <width>101</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Clip Polygon</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="set_bound">
+    <property name="geometry">
+     <rect>
+      <x>1080</x>
+      <y>450</y>
+      <width>101</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Draw Boundary</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_18">
+    <property name="geometry">
+     <rect>
+      <x>950</x>
+      <y>400</y>
+      <width>41</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>x_min:</string>
+    </property>
+   </widget>
+   <widget class="QSpinBox" name="y_min">
+    <property name="geometry">
+     <rect>
+      <x>1120</x>
+      <y>400</y>
+      <width>46</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="minimum">
+     <number>-20</number>
+    </property>
+    <property name="maximum">
+     <number>40</number>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_16">
+    <property name="geometry">
+     <rect>
+      <x>950</x>
+      <y>370</y>
+      <width>41</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>x_max:</string>
+    </property>
+   </widget>
+   <widget class="QSpinBox" name="x_min">
+    <property name="geometry">
+     <rect>
+      <x>990</x>
+      <y>400</y>
+      <width>46</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="minimum">
+     <number>-20</number>
+    </property>
+    <property name="maximum">
+     <number>40</number>
+    </property>
+   </widget>
+   <widget class="QSpinBox" name="x_max">
+    <property name="geometry">
+     <rect>
+      <x>990</x>
+      <y>370</y>
+      <width>46</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="minimum">
+     <number>-20</number>
+    </property>
+    <property name="maximum">
+     <number>40</number>
+    </property>
+   </widget>
+   <widget class="QSpinBox" name="y_max">
+    <property name="geometry">
+     <rect>
+      <x>1120</x>
+      <y>370</y>
+      <width>46</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="minimum">
+     <number>-20</number>
+    </property>
+    <property name="maximum">
+     <number>40</number>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_19">
+    <property name="geometry">
+     <rect>
+      <x>1050</x>
+      <y>350</y>
+      <width>46</width>
+      <height>13</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Clipping</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_23">
+    <property name="geometry">
+     <rect>
+      <x>1080</x>
+      <y>400</y>
+      <width>41</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>y_min:</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_24">
+    <property name="geometry">
+     <rect>
+      <x>1080</x>
+      <y>370</y>
+      <width>41</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>y_max:</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="clr_bound">
+    <property name="geometry">
+     <rect>
+      <x>950</x>
+      <y>450</y>
+      <width>91</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Clear Boundary</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="clip_line">
+    <property name="geometry">
+     <rect>
+      <x>950</x>
+      <y>470</y>
+      <width>91</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Clip Line</string>
+    </property>
+   </widget>
+   <widget class="Line" name="line_12">
+    <property name="geometry">
+     <rect>
+      <x>1100</x>
+      <y>350</y>
+      <width>91</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_3">
+    <property name="geometry">
+     <rect>
+      <x>950</x>
+      <y>430</y>
+      <width>91</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Set Vertex</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_4">
+    <property name="geometry">
+     <rect>
+      <x>1080</x>
+      <y>430</y>
+      <width>101</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Clear Vertices</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
  </widget>
@@ -990,6 +1210,38 @@ background-color: rgb(85, 255, 255);</string>
     <hint type="destinationlabel">
      <x>934</x>
      <y>93</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_3</sender>
+   <signal>clicked()</signal>
+   <receiver>setVertex</receiver>
+   <slot>click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1009</x>
+     <y>440</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1001</x>
+     <y>60</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_4</sender>
+   <signal>clicked()</signal>
+   <receiver>clearVertex</receiver>
+   <slot>click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1151</x>
+     <y>442</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1124</x>
+     <y>62</y>
     </hint>
    </hints>
   </connection>

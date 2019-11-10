@@ -50,7 +50,21 @@ void MainWindow::point(int x,int y,int r,int g,int b)
         img.setPixel(x,y,qRgb(r,g,b));
     ui->frame->setPixmap(QPixmap::fromImage(img));
 }
+int MainWindow::changeX(int x)
+{
+    int k = ui->gridsize->value();
+    x=x-img.width()/2;
+    x/=k;
+    return x;
+}
 
+int MainWindow::changeY(int y)
+{
+    int k = ui->gridsize->value();
+    y=img.height()/2-y;
+    y/=k;
+    return y;
+}
 void MainWindow::showMousePosition(QPoint &pos)
 {
     ui->gridsize->setMinimum(1);
@@ -139,14 +153,19 @@ void MainWindow::on_Draw_clicked()
 void MainWindow::on_ResetButton_clicked()
 {
 //    img=QImage(ui->frame->width(),ui->frame->height(),QImage::Format_RGB888);
-    for(int j=0;j<img.height();j++)
-    {
-        for(int i=0;i<img.width();i++)
-        {
-            img.setPixel(i,j,qRgb(0,0,0));
-        }
-    }
-    ui->frame->setPixmap(QPixmap::fromImage(img));
+
+    // for setting the whole screen black, not very useful
+//    for(int j=0;j<img.height();j++)
+//    {
+//        for(int i=0;i<img.width();i++)
+//        {
+//            img.setPixel(i,j,qRgb(0,0,0));
+//        }
+//    }
+//    ui->frame->setPixmap(QPixmap::fromImage(img));
+    // for setting the grids and show axes
+    on_showGrid_clicked();
+    on_show_axes_clicked();
 }
 
 void MainWindow::on_showGrid_clicked()
@@ -217,11 +236,7 @@ void MainWindow::on_DDALine_clicked()
         point((int)(x+0.5),(int)(y+0.5),qRed(MainWindow::edgeColor),qGreen(MainWindow::edgeColor),qBlue(MainWindow::edgeColor));
     }
 }
-
-void MainWindow::on_BresenhamLine_clicked()
-{
-//    int r=160,g=138,b=148;
-    int r=qRed(MainWindow::edgeColor),g=qGreen(MainWindow::edgeColor),b=qBlue(MainWindow::edgeColor);
+void MainWindow::BresenhamLine(int r,int g,int b){
     ui->gridsize->setMinimum(1);
     int k = ui->gridsize->value();
     //Store the two points
@@ -280,6 +295,12 @@ void MainWindow::on_BresenhamLine_clicked()
             p+=2*(dx);
         }
     }
+}
+void MainWindow::on_BresenhamLine_clicked()
+{
+//    int r=160,g=138,b=148;
+    int r=qRed(MainWindow::edgeColor),g=qGreen(MainWindow::edgeColor),b=qBlue(MainWindow::edgeColor);
+    BresenhamLine(r,g,b);
 }
 
 void MainWindow::on_Midpoint_clicked()
@@ -1016,8 +1037,6 @@ void MainWindow::reflect_x()
     }
 }
 
-
-
 void MainWindow::on_scale_clicked()
 {
     int sx=ui->scl_x->value();
@@ -1045,7 +1064,6 @@ void MainWindow::on_scale_clicked()
     }
     drawPoly();
 }
-
 
 void MainWindow::on_shear_clicked()
 {
@@ -1117,10 +1135,6 @@ void MainWindow::on_reflect_clicked()
 }
 
 
-
-
-
-
 ///********************* Bezier Curve 4 points *******************
 
 void MainWindow::on_bez_clear_clicked()
@@ -1169,3 +1183,384 @@ void MainWindow::on_draw_bez_clicked()
 }
 
 
+
+
+// ======================== CLIPPING ====================================================
+// ======================== BOUNDARY SETTING ============================================
+
+void MainWindow::on_clr_bound_clicked()
+{
+    drawBound(0,0,0);
+}
+
+void MainWindow::on_set_bound_clicked()
+{
+    int k=ui->gridsize->value();
+    x_max=ui->x_max->value();
+    x_min=ui->x_min->value();
+    y_max=ui->y_max->value();
+    y_min=ui->y_min->value();
+
+    x_max*=k;
+    x_max+=img.width()/2;
+
+    x_min*=k;
+    x_min+=img.width()/2;
+
+    y_max*=k;
+    y_max=img.height()/2-y_max;
+
+    y_min*=k;
+    y_min=img.height()/2-y_min;
+
+    int r=qRed(edgeColor),g=qGreen(edgeColor),b=qBlue(edgeColor);
+    drawBound(r,g,b);
+}
+
+void MainWindow::drawBound(int r,int g,int b)
+{
+    //Reset the screen and draw the grid
+    //on_showgrid_clicked();
+
+    // Draw the boundary
+
+    p1.setX(x_min);
+    p2.setX(x_min);
+
+    p1.setY(y_max);
+    p2.setY(y_min);
+
+    BresenhamLine(r,g,b);
+
+    //===========
+    p1.setX(x_min);
+    p2.setX(x_max);
+
+    p1.setY(y_min);
+    p2.setY(y_min);
+
+    BresenhamLine(r,g,b);
+
+    //================
+    p1.setX(x_max);
+    p2.setX(x_max);
+
+    p1.setY(y_min);
+    p2.setY(y_max);
+
+    BresenhamLine(r,g,b);
+
+    //=================
+    p1.setX(x_max);
+    p2.setX(x_min);
+
+    p1.setY(y_max);
+    p2.setY(y_max);
+
+    BresenhamLine(r,g,b);
+}
+
+
+//========================================================================================
+
+// =================== LINE CLIPPING =====================================================
+// Defining region codes
+const int INSIDE = 0; // 0000
+const int LEFT = 1;   // 0001
+const int RIGHT = 2;  // 0010
+const int BOTTOM = 4; // 0100
+const int TOP = 8;    // 1000
+
+
+// Function to compute region code for a point(x, y)
+int MainWindow::computeCode(int x, int y)
+{
+    // initialized as being inside
+    int code = INSIDE;
+    if (x < x_min)       // to the left of rectangle
+        code |= LEFT;
+    else if (x > x_max)  // to the right of rectangle
+        code |= RIGHT;
+    if (y > y_min)       // below the rectangle
+        code |= BOTTOM;
+    else if (y < y_max)  // above the rectangle
+        code |= TOP;
+
+    return code;
+}
+// Implementing Cohen-Sutherland algorithm
+// Clipping a line from P1 = (x2, y2) to P2 = (x2, y2)
+void MainWindow::cohenSutherlandClip(int x1, int y1,int x2, int y2)
+{
+    // Compute region codes for P1, P2
+    int code1 = computeCode(x1, y1);    //Region code for P1
+    int code2 = computeCode(x2, y2);    //Region code for P2
+
+
+    // Initialize line as outside the rectangular window
+    bool accept = false;
+
+    while (true)
+    {
+
+        if ((code1 == 0) && (code2 == 0))
+        {
+            // If both endpoints lie within rectangle
+            accept = true;
+            break;
+        }
+        else if (code1 & code2)
+        {
+            // If both endpoints are outside rectangle,
+            // in same region
+            break;
+        }
+        else
+        {
+            // Some segment of line lies within the
+            // rectangle
+            int code_out;
+            int x, y;
+
+            // At least one endpoint is outside the
+            // rectangle, pick it.
+            if (code1 != 0)
+                code_out = code1;
+            else
+                code_out = code2;
+
+            // Find intersection point;
+            // using formulas y = y1 + slope * (x - x1),
+            // x = x1 + (1 / slope) * (y - y1)
+            if (code_out & TOP)
+            {
+                // point is above the clip rectangle
+                x = x1 + (int)((double)(x2 - x1) *(double)(y_max - y1) /(double)(y2 - y1));
+                y = y_max;
+            }
+            else if (code_out & BOTTOM)
+            {
+                // point is below the rectangle
+                x = x1 + (int)((double)(x2 - x1) * (double)(y_min - y1) / (double)(y2 - y1));
+                y = y_min;
+            }
+            else if (code_out & RIGHT)
+            {
+                // point is to the right of rectangle
+                y = y1 + (int)((double)(y2 - y1) * (double)(x_max - x1) / (double)(x2 - x1));
+                x = x_max;
+            }
+            else if (code_out & LEFT)
+            {
+                // point is to the left of rectangle
+                y = y1 + (int)((double)(y2 - y1) * (double)(x_min - x1) / (double)(x2 - x1));
+                x = x_min;
+            }
+
+            // Now intersection point x,y is found
+            // We replace point outside rectangle
+            // by intersection point
+            if (code_out == code1)
+            {
+                x1 = x;
+                y1 = y;
+                code1 = computeCode(x1, y1);
+            }
+            else
+            {
+                x2 = x;
+                y2 = y;
+                code2 = computeCode(x2, y2);
+            }
+        }
+    }
+    if (accept)
+    {
+        //If accepted
+        //Just reset and draw the boundary and the line
+        //Reset the screen and draw the grid
+        on_showGrid_clicked();
+        on_show_axes_clicked();
+
+//        int r=qRed(edgeColor),g=qGreen(edgeColor),b=qBlue(edgeColor);
+//        drawBound(r,g,b);
+
+//        string s=to_string((x1))+","+to_string((y1))+" "+to_string((x2))+","+to_string((y2));
+//        ui->debugger->setText(s.c_str());
+
+        p1.setX(x1);
+        p1.setY(y1);
+
+        p2.setX(x2);
+        p2.setY(y2);
+
+        on_BresenhamLine_clicked();
+    }
+    else
+    {
+        //If not accepted
+        //Just reset and draw the boundary
+        //Reset the screen and draw the grid
+        on_showGrid_clicked();
+        on_show_axes_clicked();
+
+//        int r=qRed(edgeColor),g=qGreen(edgeColor),b=qBlue(edgeColor);
+//        drawBound(r,g,b);
+
+//        string s=to_string(changeX(x1))+","+to_string(changeY(y1))+" "+to_string(changeX(x2))+","+to_string(changeY(y2));
+//        ui->debugger->setText(s.c_str());
+    }
+
+}
+
+void MainWindow::on_clip_line_clicked()
+{
+    cohenSutherlandClip(p1.x(),p1.y(),p2.x(),p2.y());
+}
+
+//========================================================================================
+
+// =================== POLYGON CLIPPING ==================================================
+// Returns x-value of point of intersection of two lines
+int MainWindow::x_intersect(int x1, int y1, int x2, int y2,int x3, int y3, int x4, int y4)
+{
+    y1=ui->frame->height()-y1+1;
+    y2=ui->frame->height()-y2+1;
+    y3=ui->frame->height()-y3+1;
+    y4=ui->frame->height()-y4+1;
+    int num = (x1*y2 - y1*x2) * (x3-x4) -(x1-x2) * (x3*y4 - y3*x4);
+    int den = (x1-x2) * (y3-y4) - (y1-y2) * (x3-x4);
+    int retx=num/den;
+    return retx;
+}
+
+// Returns y-value of point of intersection of
+// two lines
+int MainWindow::y_intersect(int x1, int y1, int x2, int y2,int x3, int y3, int x4, int y4)
+{
+    y1=ui->frame->height()-y1+1;
+    y2=ui->frame->height()-y2+1;
+    y3=ui->frame->height()-y3+1;
+    y4=ui->frame->height()-y4+1;
+    int num = (x1*y2 - y1*x2) * (y3-y4) -(y1-y2) * (x3*y4 - y3*x4);
+    int den = (x1-x2) * (y3-y4) - (y1-y2) * (x3-x4);
+    int rety= (ui->frame->height()-num/den+1);
+    return rety;
+}
+
+// This functions clips all the edges w.r.t one clip
+// edge of clipping area
+void MainWindow::clip(int x1, int y1, int x2, int y2)
+{
+    int poly_size=EdgeList.size()-1;
+    int new_poly_size = 0;
+
+    std::vector<std::pair<int,int> > new_points;
+
+    // (ix,iy),(kx,ky) are the co-ordinate values of
+    // the points
+    for (int i = 0; i < poly_size; i++)
+    {
+        // i and k form a line in polygon
+        int k = (i+1) % poly_size;
+        int ix = EdgeList[i].first, iy = EdgeList[i].second;
+        int kx = EdgeList[k].first, ky = EdgeList[k].second;
+
+        // Calculating position of first and second point
+
+        int i_pos,k_pos;
+        if(x2==x1 && ix>x1) i_pos=1;
+        else if(x2==x1 && ix<x1) i_pos=-1;
+        else if(y2==y1 && iy<y1) i_pos=1;
+        else i_pos=-1;
+
+        if(x2==x1 && kx>x1) k_pos=1;
+        else if(x2==x1 && kx<x1) k_pos=-1;
+        else if(y2==y1 && ky<y1) k_pos=1;
+        else k_pos=-1;
+
+        if(y1>y2||x1>x2)
+        {
+            i_pos=(-1)*i_pos;
+            k_pos=(-1)*k_pos;
+        }
+
+        // Case 1 : When both points are inside
+        if (i_pos >= 0  && k_pos >= 0)
+        {
+            //Only second point is added
+            //            new_points[new_poly_size][0] = kx;
+            //            new_points[new_poly_size][1] = ky;
+            new_points.push_back(std::make_pair(kx,ky));
+            new_poly_size++;
+        }
+
+        // Case 2: When only first point is outside
+        else if (i_pos < 0  && k_pos >= 0)
+        {
+            // Point of intersection with edge
+            // and the second point is added
+
+            new_points.push_back(std::make_pair(x_intersect(x1,y1, x2, y2, ix, iy, kx, ky),y_intersect(x1,y1, x2, y2, ix, iy, kx, ky)));
+            new_poly_size++;
+
+            new_points.push_back(std::make_pair(kx,ky));
+            new_poly_size++;
+        }
+
+        // Case 3: When only second point is outside
+        else if (i_pos >= 0  && k_pos < 0)
+        {
+            //Only point of intersection with edge is added
+
+            new_points.push_back(std::make_pair(x_intersect(x1,y1, x2, y2, ix, iy, kx, ky),y_intersect(x1,y1, x2, y2, ix, iy, kx, ky)));
+            new_poly_size++;
+        }
+
+        // Case 4: When both points are outside
+        else
+        {
+            //No points are added
+        }
+    }
+
+    // Copying new points into original array
+    // and changing the no. of vertices
+    poly_size = new_poly_size;
+    EdgeList.clear();
+    for (int i = 0; i < new_points.size(); i++)
+    {
+        EdgeList.push_back(new_points[i]);
+    }
+    if(poly_size>0)
+        EdgeList.push_back(new_points[0]);
+
+}
+
+// Implements Sutherland–Hodgman algorithm
+void MainWindow::suthHodgClip()
+{
+    //i and k are two consecutive indexes
+    clip(x_min,y_max,x_min,y_min); //Left
+    if(EdgeList.size()>0)
+        clip(x_min,y_min,x_max,y_min); //Bottom
+    if(EdgeList.size()>1)
+        clip(x_max,y_min,x_max,y_max); //Right
+    if(EdgeList.size()>1)
+        clip(x_max,y_max,x_min,y_max); //Top
+
+    on_showGrid_clicked();
+    on_show_axes_clicked();
+
+//    int r=qRed(edgeColor),g=qGreen(edgeColor),b=qBlue(edgeColor);
+//    drawBound(r,g,b);
+
+    if(EdgeList.size()>1)
+        drawPoly();
+
+}
+
+void MainWindow::on_clip_poly_clicked()
+{
+    suthHodgClip();
+}

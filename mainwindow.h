@@ -38,8 +38,12 @@ private slots:
 
     void on_showGrid_clicked();
 
+    int changeX(int x);
+    int changeY(int y);
+
     void on_DDALine_clicked();
 
+    void BresenhamLine(int r,int g,int b);
     void on_BresenhamLine_clicked();
 
     void on_Midpoint_clicked();
@@ -93,9 +97,34 @@ private slots:
 
     void on_setPivot_clicked();
 
+    void on_clr_bound_clicked();
+
+    void on_set_bound_clicked();
+
+    void on_clip_line_clicked();
+
+    void on_clip_poly_clicked();
+
+    void drawBound(int r,int g,int b);
+
+    int computeCode(int x, int y);
+
+    void cohenSutherlandClip(int x1, int y1,int x2, int y2);
+
+    int x_intersect(int x1, int y1, int x2, int y2,int x3, int y3, int x4, int y4);
+
+    int y_intersect(int x1, int y1, int x2, int y2,int x3, int y3, int x4, int y4);
+
+    void clip(int x1, int y1, int x2, int y2);
+
+    void suthHodgClip();
+
+
+
 private:
     Ui::MainWindow *ui;
     QPoint p1,p2;
+    int x_max,x_min,y_max,y_min;
 //    QRgb axesColor = qRgb();
     QRgb edgeColor = qRgb(220,153,196);
     QRgb gridColor = qRgb(80,80,80);
